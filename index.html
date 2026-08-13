@@ -68,8 +68,12 @@
   .ex-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; gap: 6px; }
   .ex-name { font-weight: 700; font-size: 15px; flex: 1; min-width: 0; background: transparent; border: none; color: var(--text); padding: 4px 0; }
   .ex-name:focus { outline: none; border-bottom: 1px solid var(--accent); }
-  .ex-tools { display: flex; gap: 2px; align-items: center; flex-shrink: 0; }
-  .ex-tools button { padding: 5px 7px; font-size: 12px; color: var(--sub); background: transparent; }
+  .ex-tools { display: flex; gap: 5px; align-items: center; flex-shrink: 0; }
+  .ex-tools button {
+    min-width: 40px; height: 40px; padding: 0; font-size: 18px; line-height: 1;
+    color: var(--sub); background: var(--card2); border-radius: 10px;
+  }
+  .ex-tools button.rest-badge { min-width: auto; height: auto; font-size: 12px; }
   .rest-badge { font-size: 12px; color: var(--sub); background: var(--card2); border-radius: 8px; padding: 5px 8px; white-space: nowrap; }
 
   table.sets { width: 100%; border-collapse: collapse; margin-top: 6px; }
@@ -87,8 +91,11 @@
     display: inline-flex; align-items: center; justify-content: center;
   }
   .chk.on { background: var(--green); color: #fff; }
-  .rm-set { width: 30px; height: 30px; background: transparent; color: #b4bac8; font-size: 15px; }
-  .add-set { width: 100%; margin-top: 8px; padding: 9px; font-size: 13px; color: var(--accent2); background: var(--card2); }
+  .set-actions { display: flex; gap: 8px; margin-top: 10px; }
+  .set-actions button { flex: 1; padding: 11px; font-size: 13.5px; font-weight: 600; background: var(--card2); }
+  .add-set { color: var(--accent2); }
+  .del-set { color: var(--red); }
+  .set-actions button:disabled { opacity: .35; }
 
   .finish-btn {
     width: 100%; margin-top: 14px; padding: 17px; font-size: 16px; font-weight: 700;
@@ -115,6 +122,8 @@
     border-radius: 18px 18px 0 0; box-shadow: 0 -4px 24px rgba(20,30,60,.25); z-index: 50;
   }
   #timerbar.show { display: flex; }
+  #timerbar.rest-done { background: var(--green); }
+  #timerbar.rest-done .t { font-size: 24px; }
   #timerbar .t { font-size: 30px; font-weight: 800; font-variant-numeric: tabular-nums; min-width: 92px; }
   #timerbar .lbl { font-size: 12px; opacity: .9; }
   #timerbar button { background: rgba(255,255,255,.22); color: #fff; padding: 9px 12px; font-size: 13px; font-weight: 600; }
@@ -188,8 +197,8 @@
 
 <div id="routine"></div>
 <div class="tpl-row">
-  <button onclick="applyTemplate('lower')">🦵 하체 루틴<span class="sub">스쿼트·데드 외 6종</span></button>
-  <button onclick="applyTemplate('upper')">💪 상체 루틴<span class="sub">벤치·랫풀 외 7종</span></button>
+  <button onclick="applyTemplate('lower')">🦵 하체 루틴<span class="sub">스쿼트 65 · 55분</span></button>
+  <button onclick="applyTemplate('upper')">💪 상체 루틴<span class="sub">벤치 55 · 55분</span></button>
   <button onclick="applyTemplate('zone2')">🏃 존2 러닝<span class="sub">30분</span></button>
 </div>
 <button class="add-ex" onclick="openExModal()">＋ 운동 추가</button>
@@ -258,7 +267,7 @@
     <div class="hint" id="finish-hint"></div>
     <div class="row">
       <button onclick="closeModal('finish-modal')">닫기</button>
-      <button class="primary" onclick="copySummary()">📋 기록 복사</button>
+      <button class="primary" onclick="copySummary()">📋 다시 복사</button>
     </div>
   </div>
 </div>
@@ -277,7 +286,7 @@
 <script>
 'use strict';
 const KEY = 'workout-tracker-v1';
-const PRESETS = ['스쿼트','벤치프레스','데드리프트','오버헤드프레스','바벨로우','랫풀다운','풀업','딥스','레그프레스','레그컬','레그익스텐션','런지','인클라인 벤치프레스','덤벨 숄더프레스','사이드 레터럴 레이즈','덤벨컬','해머컬','케이블 푸시다운','페이스풀','힙쓰러스트','카프레이즈','크런치','플랭크','러닝머신','싸이클','로잉머신'];
+const PRESETS = ['스쿼트','벤치프레스','데드리프트','오버헤드프레스','바벨로우','랫풀다운','풀업','딥스','레그프레스','레그컬','레그익스텐션','런지','인클라인 벤치프레스','팩덱 플라이','케이블 크로스오버','덤벨 숄더프레스','사이드 레터럴 레이즈','덤벨컬','해머컬','케이블 푸시다운','페이스풀','힙쓰러스트','카프레이즈','크런치','플랭크','러닝머신','싸이클','로잉머신'];
 const REST_CHOICES = [30,45,60,90,120,150,180,240,300];
 
 /* ---------- user profile (2026.08) ---------- */
@@ -285,7 +294,7 @@ const PROFILE = `[사용자 운동 프로필 2026.08]
 목표: ①체지방 감량·유지(복부 최소화, 무리한 감량 X) ②하체·가슴·등·어깨 위주 균형 근성장(팔은 보조) ③기능적인 몸(자세·체력·골프에 도움) ④존2 러닝으로 심폐지구력 향상.
 우선순위: 건강>체력>근력>근육량>체형. 평생 지속 가능한 루틴 지향.
 스케줄: 주 3~4회 운동, 1회 50분~1시간. 근력 주 1~2회(하체/상체) + 존2 유산소 주 2회 30분. 예: 화 상체, 목 존2 30분, 토 하체, 일 존2 30분 (상황에 따라 유동적). 조언 시 한 세션이 50~60분 안에 끝나도록 운동 수·세트를 구성할 것.
-기준 수치(원래 베스트 — 최근 휴식기로 현재는 이보다 낮음, 복귀 중): 백스쿼트 1RM 100kg / 5RM 80kg. 벤치 5RM 60kg. 데드리프트 1RM 100kg이지만 스쿼트 뒤에 10회 기준으로 붙이면 60~80kg이 편안한 수준.
+기준 수치: 백스쿼트 1RM 100kg / 5RM 80kg(현재 복귀 중, 8/13 60×5×4 수행). 벤치 5RM 60kg — 2026-08-14에 60×5 재달성하여 복귀 완료. 데드리프트 1RM 100kg이지만 스쿼트 뒤에 10회 기준으로 붙이면 60~80kg이 편안한 수준.
 목표 중량: 백스쿼트 68~76×8 → 80×8×3 → 85×8×3 (장기 100kg+ 작업세트). 벤치 50×8·56×5 → 50×10×3 → 56×8×3 → 60kg 작업세트 (장기 60kg+). 데드 60×10×3 → 5~6회 중심 전환 예정, 허리 피로 최소화 (장기 100kg+). 레그프레스 80 → 90~120kg 10~12회.
 조언 시 유의: 최근 운동을 쉬엄쉬엄 해서 현재 작업중량이 기준 수치보다 낮은 상태. 급격한 증량 제안보다 기준 수치까지의 점진적 복귀를 우선하고, 복귀 속도는 기록상 세트 완료율과 일관성을 보고 판단할 것.
 증량 원칙: 복합운동 RPE 7~8(2~3회 여유), 고립운동 RPE 8~9. 무게보다 자세·동작 완성도 우선, 점진적 과부하.
@@ -297,22 +306,19 @@ const PROFILE = `[사용자 운동 프로필 2026.08]
 function S(w, r) { return { w, r, done: false }; }
 const TEMPLATES = {
   lower: { label: '하체 루틴', exercises: [
-    { name: '백스쿼트', rest: 180, sets: [S(20,10),S(42,5),S(59,5),S(68,8),S(72,8),S(76,8)] },
-    { name: '데드리프트', rest: 180, sets: [S(60,10),S(60,10),S(60,10)] },
-    { name: '레그프레스', rest: 120, sets: [S(80,10),S(80,10),S(80,10)] },
+    { name: '백스쿼트', rest: 180, sets: [S(20,8),S(42,5),S(60,5),S(65,8),S(65,8),S(65,8)] },
+    { name: '데드리프트', rest: 180, sets: [S(60,8),S(60,8)] },
+    { name: '레그프레스', rest: 120, sets: [S(90,10),S(90,10),S(90,10)] },
     { name: '레그컬', rest: 90, sets: [S(31.5,15),S(31.5,15),S(31.5,15)] },
-    { name: '레그익스텐션', rest: 90, sets: [S(40.5,15),S(40.5,15),S(40.5,12)] },
-    { name: '힙 어브덕션', rest: 60, sets: [S(31.5,15),S(31.5,15),S(31.5,15)] }
+    { name: '존2 러닝 마무리 (횟수=분)', rest: 60, sets: [S(0,15)] }
   ]},
   upper: { label: '상체 루틴', exercises: [
-    { name: '벤치프레스', rest: 180, sets: [S(20,10),S(42,10),S(50,8),S(50,8),S(56,5)] },
-    { name: '랫풀다운', rest: 90, sets: [S(31.5,10),S(31.5,10),S(31.5,10)] },
-    { name: '시티드 로우', rest: 90, sets: [S(40.5,10),S(40.5,10),S(40.5,10)] },
-    { name: '숄더프레스', rest: 90, sets: [S(31.5,10),S(31.5,10),S(31.5,10)] },
-    { name: '레터럴레이즈', rest: 60, sets: [S(4.5,15),S(6,12),S(6,12)] },
-    { name: '이지바 컬', rest: 60, sets: [S(23,10),S(23,10),S(23,10)] },
-    { name: '케이블 푸시다운', rest: 60, sets: [S(18.1,15),S(18.1,15),S(18.1,15)] },
-    { name: '페이스풀', rest: 60, sets: [S(0,15),S(0,15),S(0,15)] }
+    { name: '벤치프레스', rest: 180, sets: [S(20,8),S(40,5),S(50,3),S(55,6),S(55,6),S(55,6)] },
+    { name: '팩덱 플라이', rest: 90, sets: [S(40.5,12),S(40.5,12),S(40.5,12)] },
+    { name: '랫풀다운', rest: 90, sets: [S(36,10),S(36,10),S(36,10)] },
+    { name: '숄더프레스', rest: 90, sets: [S(34,10),S(34,10),S(34,10)] },
+    { name: '레터럴레이즈', rest: 60, sets: [S(9,12),S(9,12),S(9,12)] },
+    { name: '존2 러닝 마무리 (횟수=분)', rest: 60, sets: [S(0,15)] }
   ]},
   zone2: { label: '존2 러닝', exercises: [
     { name: '존2 러닝 (횟수=분)', rest: 60, sets: [S(0,30)] }
@@ -333,17 +339,36 @@ let viewYear, viewMonth, selDate;
 
 /* Claude가 대화에서 넣어준 기록 — 해당 날짜가 비어 있을 때만 1회 병합됨 */
 const SEED = {
+  '2026-08-16': { exercises: [
+    { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:30,done:false}] }
+  ]},
+  '2026-08-18': { exercises: [
+    { name: '백스쿼트', rest: 180, sets: [{w:20,r:8,done:false},{w:42,r:5,done:false},{w:60,r:5,done:false},{w:65,r:8,done:false},{w:65,r:8,done:false},{w:65,r:8,done:false}] },
+    { name: '데드리프트', rest: 180, sets: [{w:60,r:8,done:false},{w:60,r:8,done:false}] },
+    { name: '레그프레스', rest: 120, sets: [{w:90,r:10,done:false},{w:90,r:10,done:false},{w:90,r:10,done:false}] },
+    { name: '레그컬', rest: 90, sets: [{w:31.5,r:15,done:false},{w:31.5,r:15,done:false},{w:31.5,r:15,done:false}] },
+    { name: '존2 러닝 마무리 (횟수=분)', rest: 60, sets: [{w:0,r:15,done:false}] }
+  ]},
+  '2026-08-21': { exercises: [
+    { name: '벤치프레스', rest: 180, sets: [{w:20,r:8,done:false},{w:40,r:5,done:false},{w:50,r:3,done:false},{w:55,r:6,done:false},{w:55,r:6,done:false},{w:55,r:6,done:false}] },
+    { name: '팩덱 플라이', rest: 90, sets: [{w:40.5,r:12,done:false},{w:40.5,r:12,done:false},{w:40.5,r:12,done:false}] },
+    { name: '랫풀다운', rest: 90, sets: [{w:36,r:10,done:false},{w:36,r:10,done:false},{w:36,r:10,done:false}] },
+    { name: '숄더프레스', rest: 90, sets: [{w:34,r:10,done:false},{w:34,r:10,done:false},{w:34,r:10,done:false}] },
+    { name: '레터럴레이즈', rest: 60, sets: [{w:9,r:12,done:false},{w:9,r:12,done:false},{w:9,r:12,done:false}] },
+    { name: '존2 러닝 마무리 (횟수=분)', rest: 60, sets: [{w:0,r:15,done:false}] }
+  ]},
   '2026-08-13': { exercises: [
     { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:30,done:true}] },
     { name: '로잉머신 500m 2:40페이스 (횟수=분)', rest: 60, sets: [{w:0,r:11,done:true}] },
     { name: '백스쿼트', rest: 180, sets: [{w:60,r:5,done:true},{w:60,r:5,done:true},{w:60,r:5,done:true},{w:60,r:5,done:true}] }
   ]},
   '2026-08-14': { exercises: [
-    { name: '벤치프레스', rest: 180, sets: [{w:20,r:10,done:false},{w:40,r:8,done:false},{w:45,r:8,done:false},{w:45,r:8,done:false},{w:50,r:6,done:false}] },
-    { name: '랫풀다운', rest: 90, sets: [{w:31.5,r:10,done:false},{w:31.5,r:10,done:false},{w:31.5,r:10,done:false}] },
-    { name: '숄더프레스', rest: 90, sets: [{w:31.5,r:10,done:false},{w:31.5,r:10,done:false},{w:31.5,r:10,done:false}] },
-    { name: '레터럴레이즈', rest: 60, sets: [{w:4.5,r:15,done:false},{w:6,r:12,done:false},{w:6,r:12,done:false}] },
-    { name: '존2 러닝 마무리 (횟수=분)', rest: 60, sets: [{w:0,r:15,done:false}] }
+    { name: '벤치프레스', rest: 180, sets: [{w:20,r:10,done:true},{w:42,r:8,done:true},{w:42,r:10,done:true},{w:50,r:6,done:true},{w:60,r:5,done:true}] },
+    { name: '팩덱 플라이', rest: 90, sets: [{w:37.5,r:10,done:true},{w:40.5,r:10,done:true},{w:40.5,r:10,done:true}] },
+    { name: '랫풀다운', rest: 90, sets: [{w:31.5,r:10,done:true},{w:31.5,r:10,done:true},{w:31.5,r:10,done:true}] },
+    { name: '숄더프레스', rest: 90, sets: [{w:31.5,r:10,done:true},{w:31.5,r:10,done:true},{w:31.5,r:10,done:true}] },
+    { name: '레터럴레이즈', rest: 60, sets: [{w:9,r:12,done:true},{w:9,r:12,done:true},{w:9,r:12,done:true}] },
+    { name: '존2 러닝 마무리 (횟수=분)', rest: 60, sets: [{w:0,r:15,done:true}] }
   ]}
 };
 /* 저장소가 막힌 환경(파일 미리보기 등)에서도 앱이 죽지 않도록 감싼다 */
@@ -471,7 +496,7 @@ function renderRoutine() {
 
     const table = document.createElement('table');
     table.className = 'sets';
-    table.innerHTML = '<tr><th>세트</th><th>kg</th><th>횟수</th><th>완료</th><th></th></tr>';
+    table.innerHTML = '<tr><th>세트</th><th>kg</th><th>횟수</th><th>완료</th></tr>';
     ex.sets.forEach((s, si) => {
       const tr = document.createElement('tr');
       if (s.done) tr.className = 'done-row';
@@ -489,15 +514,13 @@ function renderRoutine() {
         if (s.done) startTimer(ex.rest, ex.name, si+1);
       };
       tdC.appendChild(chk);
-      const tdX = document.createElement('td');
-      const rm = document.createElement('button');
-      rm.className = 'rm-set'; rm.textContent = '−';
-      rm.onclick = () => { ex.sets.splice(si,1); save(); renderRoutine(); };
-      tdX.appendChild(rm);
-      tr.append(tdN, tdW, tdR, tdC, tdX);
+      tr.append(tdN, tdW, tdR, tdC);
       table.appendChild(tr);
     });
     card.appendChild(table);
+
+    const actions = document.createElement('div');
+    actions.className = 'set-actions';
 
     const addSet = document.createElement('button');
     addSet.className = 'add-set';
@@ -507,7 +530,15 @@ function renderRoutine() {
       ex.sets.push({ w: last ? last.w : 0, r: last ? last.r : 10, done: false });
       save(); renderRoutine();
     };
-    card.appendChild(addSet);
+
+    const delSet = document.createElement('button');
+    delSet.className = 'del-set';
+    delSet.textContent = '− 세트 삭제';
+    delSet.disabled = ex.sets.length <= 1;
+    delSet.onclick = () => { ex.sets.pop(); save(); renderRoutine(); };
+
+    actions.append(addSet, delSet);
+    card.appendChild(actions);
     box.appendChild(card);
   });
 }
@@ -583,33 +614,57 @@ function closeModal(id) { document.getElementById(id).classList.remove('show'); 
 document.querySelectorAll('.modal-bg').forEach(m => m.addEventListener('click', e => { if (e.target === m) m.classList.remove('show'); }));
 
 /* ---------- rest timer ---------- */
-let timerId = null, remain = 0, total = 0;
+/* 휴식 타이머 — 남은 시간은 '끝나는 시각'으로 계산한다.
+   화면을 벗어나 있어도(백그라운드 스로틀링) 돌아왔을 때 시간이 정확하다. */
+let timerId = null, endAt = 0, total = 0, timerLbl = '';
 function startTimer(sec, exName, setNum) {
   stopTimer();
-  remain = sec; total = sec;
-  document.getElementById('timer-lbl').textContent = `${exName} · ${setNum}세트 완료 — 휴식`;
-  document.getElementById('timerbar').classList.add('show');
+  total = sec;
+  endAt = Date.now() + sec * 1000;
+  timerLbl = `${exName} · ${setNum}세트 완료 — 휴식`;
+  const bar = document.getElementById('timerbar');
+  bar.classList.remove('rest-done');
+  bar.classList.add('show');
+  document.getElementById('timer-lbl').textContent = timerLbl;
   tick();
-  timerId = setInterval(tick, 1000);
+  timerId = setInterval(tick, 500);
   if (navigator.wakeLock) navigator.wakeLock.request('screen').catch(()=>{});
 }
+function remainSec() { return Math.max(0, Math.round((endAt - Date.now()) / 1000)); }
 function tick() {
+  const remain = remainSec();
   document.getElementById('timer-txt').textContent = `${Math.floor(remain/60)}:${String(remain%60).padStart(2,'0')}`;
   document.getElementById('timer-prog').style.width = (total ? (remain/total*100) : 0) + '%';
-  if (remain <= 0) { finishTimer(); return; }
-  remain--;
+  if (remain <= 0) finishTimer();
 }
-function adjustTimer(d) { remain = Math.max(0, remain + d); total = Math.max(total, remain); tick(); }
+function adjustTimer(d) {
+  if (!timerId && !document.getElementById('timerbar').classList.contains('show')) return;
+  endAt = Math.max(Date.now(), endAt + d * 1000);
+  total = Math.max(total, remainSec());
+  if (!timerId) { document.getElementById('timerbar').classList.remove('rest-done'); timerId = setInterval(tick, 500); }
+  document.getElementById('timer-lbl').textContent = timerLbl;
+  tick();
+}
 function stopTimer() {
   if (timerId) clearInterval(timerId);
   timerId = null;
-  document.getElementById('timerbar').classList.remove('show');
+  const bar = document.getElementById('timerbar');
+  bar.classList.remove('show', 'rest-done');
 }
 function finishTimer() {
-  stopTimer();
+  if (timerId) clearInterval(timerId);
+  timerId = null;
+  const bar = document.getElementById('timerbar');
+  bar.classList.add('rest-done');
+  document.getElementById('timer-lbl').textContent = '휴식 완료 — 다음 세트!';
+  document.getElementById('timer-txt').textContent = '0:00';
+  document.getElementById('timer-prog').style.width = '0%';
   beep();
   if (navigator.vibrate) navigator.vibrate([200,100,200]);
 }
+/* 다른 앱/탭을 보다 돌아오면 즉시 시간 재계산 */
+document.addEventListener('visibilitychange', () => { if (!document.hidden && timerId) tick(); });
+window.addEventListener('focus', () => { if (timerId) tick(); });
 function beep() {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -727,7 +782,7 @@ function summaryText(days) {
     ).join(' | ');
   }).join('\n');
 }
-function copySummary() {
+function copySummary(quiet) {
   const day = data[selDate];
   let scope, txt;
   if (day && day.exercises.length) {
@@ -740,7 +795,7 @@ function copySummary() {
     txt = summaryText(hist);
   }
   const full = `[운동 기록 — ${scope}] (✓=완료, ✗=미완료)\n${txt}`;
-  const done = () => toast('📋 복사됨 — Claude 대화에 붙여넣으세요');
+  const done = () => { if (!quiet) toast('📋 복사됨 — Claude 대화에 붙여넣으세요'); };
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(full).then(done, () => fallbackCopy(full, done));
   } else fallbackCopy(full, done);
@@ -802,11 +857,11 @@ function finishWorkout() {
     `<div><div class="n">${mins}</div><div class="l">소요 시간(분)</div></div>` +
     (vol > 0 ? `<div><div class="n">${vol.toLocaleString()}</div><div class="l">총 볼륨(kg)</div></div>` : '');
   document.getElementById('finish-hint').innerHTML =
-    '기록 파일을 저장합니다. 저장 위치를 <b>iCloud Drive → Workout</b> 폴더로 지정하세요.<br>' +
-    '그다음 Claude에게 <b>"운동 완료했어"</b>라고 알려주면 기록을 읽고 다음 루틴을 잡아줍니다.' +
-    (undone ? `<br><br>※ 미완료 세트 ${undone}개는 그대로 기록에 남습니다.` : '');
+    '📋 오늘 기록을 <b>클립보드에 복사했습니다.</b><br>' +
+    'Claude 대화창에 그대로 <b>붙여넣기</b> 하시면 기록을 반영하고 다음 루틴을 잡아줍니다.' +
+    (undone ? `<br><br>※ 미완료 세트 ${undone}개는 ✗로 기록에 남습니다.` : '');
   document.getElementById('finish-modal').classList.add('show');
-  exportData();
+  copySummary(true);
 }
 
 /* ---------- backup ---------- */
