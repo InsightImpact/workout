@@ -90,6 +90,17 @@
   .rm-set { width: 30px; height: 30px; background: transparent; color: #b4bac8; font-size: 15px; }
   .add-set { width: 100%; margin-top: 8px; padding: 9px; font-size: 13px; color: var(--accent2); background: var(--card2); }
 
+  .finish-btn {
+    width: 100%; margin-top: 14px; padding: 17px; font-size: 16px; font-weight: 700;
+    background: var(--green); color: #fff; box-shadow: 0 2px 8px rgba(31,174,102,.28);
+  }
+  .finish-btn.done { background: var(--card2); color: var(--sub); box-shadow: none; font-weight: 600; }
+  .menu-list button { width: 100%; text-align: left; padding: 15px 14px; font-size: 15px; background: var(--card2); margin-bottom: 8px; }
+  .finish-stat { display: flex; gap: 8px; margin: 4px 0 12px; }
+  .finish-stat div { flex: 1; background: var(--card2); border-radius: 12px; padding: 12px 8px; text-align: center; }
+  .finish-stat .n { font-size: 20px; font-weight: 800; color: var(--text); }
+  .finish-stat .l { font-size: 11px; color: var(--sub); margin-top: 3px; }
+
   .add-ex { width: 100%; padding: 14px; border: 1.5px dashed #c9cedb; border-radius: 16px; background: transparent; color: var(--accent2); font-size: 14px; font-weight: 600; }
   .tpl-row { display: flex; gap: 8px; margin-bottom: 10px; }
   .tpl-row button { flex: 1; padding: 12px 6px; font-size: 13px; font-weight: 600; background: var(--card); border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(20,30,60,.05); }
@@ -152,9 +163,7 @@
   🏋️ 운동 기록
   <span class="tools">
     <button class="advice-btn" onclick="openAdvice()">✨ 조언</button>
-    <button class="icon-btn" onclick="copySummary()">📋 복사</button>
-    <button class="icon-btn" onclick="exportData()">백업</button>
-    <button class="icon-btn" onclick="importData()">복원</button>
+    <button class="icon-btn" onclick="openMenu()">⋯</button>
   </span>
 </h1>
 
@@ -170,7 +179,7 @@
 </div>
 
 <div class="day-head">
-  <span class="d" id="day-title"></span>
+  <span class="d"><span id="day-title"></span><span class="sess" id="sess-time"></span></span>
   <span class="actions">
     <button class="btn-copy" onclick="openCopyModal()">복사</button>
     <button class="btn-del" onclick="clearDay()">비우기</button>
@@ -184,6 +193,7 @@
   <button onclick="applyTemplate('zone2')">🏃 존2 러닝<span class="sub">30분</span></button>
 </div>
 <button class="add-ex" onclick="openExModal()">＋ 운동 추가</button>
+<button class="finish-btn" id="finish-btn" onclick="finishWorkout()">✅ 오늘 운동 완료</button>
 
 <div id="timerbar">
   <div class="prog" id="timer-prog"></div>
@@ -226,6 +236,30 @@
     <h3>세트 간 휴식 시간</h3>
     <div class="rest-opts" id="rest-opts"></div>
     <div class="row"><button onclick="closeModal('rest-modal')">닫기</button></div>
+  </div>
+</div>
+
+<div class="modal-bg" id="menu-modal">
+  <div class="modal">
+    <h3>기타</h3>
+    <div class="menu-list">
+      <button onclick="closeModal('menu-modal'); copySummary()">📋 기록 텍스트 복사</button>
+      <button onclick="closeModal('menu-modal'); exportData()">💾 백업 파일 저장</button>
+      <button onclick="closeModal('menu-modal'); importData()">📂 백업 파일에서 복원</button>
+    </div>
+    <div class="row"><button onclick="closeModal('menu-modal')">닫기</button></div>
+  </div>
+</div>
+
+<div class="modal-bg" id="finish-modal">
+  <div class="modal">
+    <h3>💪 오늘 운동 완료</h3>
+    <div class="finish-stat" id="finish-stat"></div>
+    <div class="hint" id="finish-hint"></div>
+    <div class="row">
+      <button onclick="closeModal('finish-modal')">닫기</button>
+      <button class="primary" onclick="copySummary()">📋 기록 복사</button>
+    </div>
   </div>
 </div>
 
@@ -397,9 +431,16 @@ function renderRoutine() {
   const [y,m,d] = selDate.split('-').map(Number);
   const dow = ['일','월','화','수','목','금','토'][new Date(y,m-1,d).getDay()];
   document.getElementById('day-title').textContent = `${m}월 ${d}일 (${dow})`;
+  renderSessionTime();
   const box = document.getElementById('routine');
   box.innerHTML = '';
   const day = data[selDate];
+  const fbtn = document.getElementById('finish-btn');
+  if (fbtn) {
+    const finished = day && day.endedAt;
+    fbtn.textContent = finished ? '✅ 완료됨 — 다시 저장하기' : '✅ 오늘 운동 완료';
+    fbtn.className = 'finish-btn' + (finished ? ' done' : '');
+  }
   if (!day || !day.exercises.length) {
     box.innerHTML = '<div class="empty">이 날의 루틴이 없습니다.<br>운동을 추가하거나 다른 날짜에서 복사해 오세요.</div>';
     return;
@@ -443,6 +484,7 @@ function renderRoutine() {
       chk.textContent = '✓';
       chk.onclick = () => {
         s.done = !s.done;
+        if (s.done && !day.startedAt) day.startedAt = Date.now();
         save(); renderRoutine();
         if (s.done) startTimer(ex.rest, ex.name, si+1);
       };
@@ -677,11 +719,13 @@ function toast(msg) {
 
 /* ---------- copy summary for pasting into Claude ---------- */
 function summaryText(days) {
-  return Object.entries(days).map(([ds, day]) =>
-    ds + ': ' + day.exercises.map(e =>
+  return Object.entries(days).map(([ds, day]) => {
+    const mins = elapsedMin(day);
+    const meta = mins !== null ? ` (${mins}분${day.endedAt ? '' : ', 진행중'})` : '';
+    return ds + meta + ': ' + day.exercises.map(e =>
       `${e.name} ${e.sets.map(s => `${s.w}kg×${s.r}${s.done ? '✓' : '✗'}`).join(', ')}`
-    ).join(' | ')
-  ).join('\n');
+    ).join(' | ');
+  }).join('\n');
 }
 function copySummary() {
   const day = data[selDate];
@@ -712,12 +756,65 @@ function fallbackCopy(txt, done) {
   ta.remove();
 }
 
+/* ---------- 운동 시간 ---------- */
+function elapsedMin(day) {
+  if (!day || !day.startedAt) return null;
+  const end = day.endedAt || Date.now();
+  return Math.max(1, Math.round((end - day.startedAt) / 60000));
+}
+function renderSessionTime() {
+  const el = document.getElementById('sess-time');
+  if (!el) return;
+  const day = data[selDate];
+  const mins = elapsedMin(day);
+  if (mins === null) { el.className = 'sess'; el.textContent = ''; return; }
+  if (day.endedAt) {
+    el.className = 'sess show done';
+    el.textContent = `✅ ${mins}분`;
+  } else {
+    el.className = 'sess show live';
+    el.textContent = `🕒 운동 중 ${mins}분`;
+  }
+}
+setInterval(renderSessionTime, 20000);
+
+/* ---------- 운동 완료 ---------- */
+function openMenu() { document.getElementById('menu-modal').classList.add('show'); }
+
+function finishWorkout() {
+  const day = data[selDate];
+  if (!day || !day.exercises.length) { alert('이 날에 기록된 운동이 없습니다.'); return; }
+  const sets = day.exercises.flatMap(e => e.sets);
+  const doneSets = sets.filter(s => s.done);
+  if (!doneSets.length) { alert('완료 체크한 세트가 하나도 없습니다.'); return; }
+  const undone = sets.length - doneSets.length;
+  if (undone && !confirm(`아직 체크하지 않은 세트가 ${undone}개 있습니다.\n그대로 오늘 운동을 마칠까요?`)) return;
+
+  stopTimer();
+  day.endedAt = Date.now();
+  if (!day.startedAt) day.startedAt = day.endedAt;
+  save(); renderRoutine();
+
+  const mins = Math.max(1, Math.round((day.endedAt - day.startedAt) / 60000));
+  const vol = Math.round(doneSets.reduce((a, s) => a + (s.w || 0) * (s.r || 0), 0));
+  document.getElementById('finish-stat').innerHTML =
+    `<div><div class="n">${doneSets.length}</div><div class="l">완료 세트</div></div>` +
+    `<div><div class="n">${mins}</div><div class="l">소요 시간(분)</div></div>` +
+    (vol > 0 ? `<div><div class="n">${vol.toLocaleString()}</div><div class="l">총 볼륨(kg)</div></div>` : '');
+  document.getElementById('finish-hint').innerHTML =
+    '기록 파일을 저장합니다. 저장 위치를 <b>iCloud Drive → Workout</b> 폴더로 지정하세요.<br>' +
+    '그다음 Claude에게 <b>"운동 완료했어"</b>라고 알려주면 기록을 읽고 다음 루틴을 잡아줍니다.' +
+    (undone ? `<br><br>※ 미완료 세트 ${undone}개는 그대로 기록에 남습니다.` : '');
+  document.getElementById('finish-modal').classList.add('show');
+  exportData();
+}
+
 /* ---------- backup ---------- */
 function exportData() {
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `workout-backup-${todayStr()}.json`;
+  a.download = `workout-${selDate || todayStr()}.json`;
   a.click();
 }
 function importData() {
