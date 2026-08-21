@@ -197,7 +197,7 @@
 
 <div id="routine"></div>
 <div class="tpl-row">
-  <button onclick="applyTemplate('lower')">🦵 하체 루틴<span class="sub">스쿼트 65 · 55분</span></button>
+  <button onclick="applyTemplate('lower')">🦵 하체 루틴<span class="sub">스쿼트 80 · 55분</span></button>
   <button onclick="applyTemplate('upper')">💪 상체 루틴<span class="sub">벤치 55 · 55분</span></button>
   <button onclick="applyTemplate('zone2')">🏃 존2 러닝<span class="sub">30분</span></button>
 </div>
@@ -294,8 +294,8 @@ const PROFILE = `[사용자 운동 프로필 2026.08]
 목표: ①체지방 감량·유지(복부 최소화, 무리한 감량 X) ②하체·가슴·등·어깨 위주 균형 근성장(팔은 보조) ③기능적인 몸(자세·체력·골프에 도움) ④존2 러닝으로 심폐지구력 향상.
 우선순위: 건강>체력>근력>근육량>체형. 평생 지속 가능한 루틴 지향.
 스케줄: 주 3~4회 운동, 1회 50분~1시간. 근력 주 1~2회(하체/상체) + 존2 유산소 주 2회 30분. 예: 화 상체, 목 존2 30분, 토 하체, 일 존2 30분 (상황에 따라 유동적). 조언 시 한 세션이 50~60분 안에 끝나도록 운동 수·세트를 구성할 것.
-기준 수치: 백스쿼트 1RM 100kg / 5RM 80kg(현재 복귀 중, 8/13 60×5×4 수행). 벤치 5RM 60kg — 2026-08-14에 60×5 재달성하여 복귀 완료. 데드리프트 1RM 100kg이지만 스쿼트 뒤에 10회 기준으로 붙이면 60~80kg이 편안한 수준.
-목표 중량: 백스쿼트 68~76×8 → 80×8×3 → 85×8×3 (장기 100kg+ 작업세트). 벤치 50×8·56×5 → 50×10×3 → 56×8×3 → 60kg 작업세트 (장기 60kg+). 데드 60×10×3 → 5~6회 중심 전환 예정, 허리 피로 최소화 (장기 100kg+). 레그프레스 80 → 90~120kg 10~12회.
+기준 수치: 백스쿼트 — 2026-08-21 바벨 93kg×5×2 수행(마지막 세트에서 100kg 시도 가능하다고 체감). 추정 1RM 약 105kg, 5RM 93kg 이상. 이전 기록(1RM 100 / 5RM 80)은 폐기하고 이 수치를 기준으로 삼을 것. 벤치 5RM 60kg — 2026-08-14 60×5 재달성. 데드리프트 1RM 100kg이지만 스쿼트 뒤에 10회 기준으로 붙이면 60~80kg이 편안한 수준.
+목표 중량: 백스쿼트 80×8×3 → 85×6×3 → 90×5×3 → 100kg 시도(복귀 6주차 이후, 세이프티/스팟 필수). 고중량 저반복을 매 세션 반복하지 말고 8회 작업세트로 볼륨을 먼저 쌓을 것. 벤치 50×8·56×5 → 50×10×3 → 56×8×3 → 60kg 작업세트 (장기 60kg+). 데드 60×10×3 → 5~6회 중심 전환 예정, 허리 피로 최소화 (장기 100kg+). 레그프레스 80 → 90~120kg 10~12회.
 조언 시 유의: 최근 운동을 쉬엄쉬엄 해서 현재 작업중량이 기준 수치보다 낮은 상태. 급격한 증량 제안보다 기준 수치까지의 점진적 복귀를 우선하고, 복귀 속도는 기록상 세트 완료율과 일관성을 보고 판단할 것.
 증량 원칙: 복합운동 RPE 7~8(2~3회 여유), 고립운동 RPE 8~9. 무게보다 자세·동작 완성도 우선, 점진적 과부하.
 존2 러닝: 현재 주 2회 30분씩 수행. 속도보다 심박(존3 진입 시 감속/걷기). 과거 기록 60분 6.69km 평균 133bpm 최고 150bpm. 장기적으로 동일 심박에서 페이스 향상(60분 기준 7.0 → 7.3 → 7.5km 페이스) 목표.
@@ -306,7 +306,7 @@ const PROFILE = `[사용자 운동 프로필 2026.08]
 function S(w, r) { return { w, r, done: false }; }
 const TEMPLATES = {
   lower: { label: '하체 루틴', exercises: [
-    { name: '백스쿼트', rest: 180, sets: [S(20,8),S(42,5),S(60,5),S(65,8),S(65,8),S(65,8)] },
+    { name: '백스쿼트', rest: 180, sets: [S(20,10),S(50,8),S(65,5),S(75,3),S(80,8),S(80,8),S(80,8)] },
     { name: '데드리프트', rest: 180, sets: [S(60,8),S(60,8)] },
     { name: '레그프레스', rest: 120, sets: [S(90,10),S(90,10),S(90,10)] },
     { name: '레그컬', rest: 90, sets: [S(31.5,15),S(31.5,15),S(31.5,15)] },
@@ -339,6 +339,24 @@ let viewYear, viewMonth, selDate;
 
 /* Claude가 대화에서 넣어준 기록 — 해당 날짜가 비어 있을 때만 1회 병합됨 */
 const SEED = {
+  '2026-08-23': { exercises: [
+    { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:30,done:false}] }
+  ]},
+  '2026-08-25': { exercises: [
+    { name: '벤치프레스', rest: 180, sets: [{w:20,r:8,done:false},{w:40,r:5,done:false},{w:50,r:3,done:false},{w:55,r:6,done:false},{w:55,r:6,done:false},{w:55,r:6,done:false}] },
+    { name: '팩덱 플라이', rest: 90, sets: [{w:40.5,r:12,done:false},{w:40.5,r:12,done:false},{w:40.5,r:12,done:false}] },
+    { name: '랫풀다운', rest: 90, sets: [{w:36,r:10,done:false},{w:36,r:10,done:false},{w:36,r:10,done:false}] },
+    { name: '숄더프레스', rest: 90, sets: [{w:34,r:10,done:false},{w:34,r:10,done:false},{w:34,r:10,done:false}] },
+    { name: '레터럴레이즈', rest: 60, sets: [{w:9,r:12,done:false},{w:9,r:12,done:false},{w:9,r:12,done:false}] },
+    { name: '존2 러닝 마무리 (횟수=분)', rest: 60, sets: [{w:0,r:15,done:false}] }
+  ]},
+  '2026-08-28': { exercises: [
+    { name: '백스쿼트', rest: 180, sets: [{w:20,r:10,done:false},{w:50,r:8,done:false},{w:65,r:5,done:false},{w:75,r:3,done:false},{w:80,r:8,done:false},{w:80,r:8,done:false},{w:80,r:8,done:false}] },
+    { name: '데드리프트', rest: 180, sets: [{w:60,r:8,done:false},{w:60,r:8,done:false}] },
+    { name: '레그프레스', rest: 120, sets: [{w:90,r:10,done:false},{w:90,r:10,done:false},{w:90,r:10,done:false}] },
+    { name: '레그컬', rest: 90, sets: [{w:31.5,r:15,done:false},{w:31.5,r:15,done:false},{w:31.5,r:15,done:false}] },
+    { name: '존2 러닝 마무리 (횟수=분)', rest: 60, sets: [{w:0,r:15,done:false}] }
+  ]},
   '2026-08-16': { exercises: [
     { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:30,done:false}] }
   ]},
@@ -889,6 +907,15 @@ function importData() {
     r.readAsText(f);
   };
   i.click();
+}
+
+/* ---------- 오프라인 캐시 등록 ---------- */
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(() => console.log('offline cache ready'))
+      .catch(err => console.log('sw register failed', err));
+  });
 }
 
 /* ---------- init ---------- */
