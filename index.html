@@ -92,7 +92,17 @@
   }
   .chk.on { background: var(--green); color: #fff; }
   .set-actions { display: flex; gap: 8px; margin-top: 10px; }
-  .set-actions button { flex: 1; padding: 11px; font-size: 13.5px; font-weight: 600; background: var(--card2); }
+  .set-actions button { flex: 1; padding: 11px 4px; font-size: 13px; font-weight: 600; background: var(--card2); }
+  .hist-btn { color: var(--accent2); }
+  .hist-best { background: var(--card2); border-radius: 10px; padding: 11px 12px; font-size: 13px; line-height: 1.6; margin-bottom: 12px; }
+  .hist-best b { color: var(--accent2); }
+  .hist-item { border-top: 1px solid var(--border); padding: 12px 0; }
+  .hist-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 5px; }
+  .hist-date { font-weight: 700; font-size: 14px; }
+  .hist-meta { font-size: 11px; color: var(--sub); font-weight: 400; margin-left: 6px; }
+  .hist-load { padding: 7px 11px; font-size: 12px; font-weight: 600; color: var(--accent2); background: var(--card2); flex-shrink: 0; }
+  .hist-sets { font-size: 13px; color: var(--sub); line-height: 1.7; }
+  .hist-sets .up { color: var(--green); font-weight: 600; }
   .add-set { color: var(--accent2); }
   .del-set { color: var(--red); }
   .set-actions button:disabled { opacity: .35; }
@@ -260,6 +270,14 @@
   </div>
 </div>
 
+<div class="modal-bg" id="hist-modal">
+  <div class="modal">
+    <h3 id="hist-title">📈 이전 기록</h3>
+    <div id="hist-body"></div>
+    <div class="row"><button onclick="closeModal('hist-modal')">닫기</button></div>
+  </div>
+</div>
+
 <div class="modal-bg" id="finish-modal">
   <div class="modal">
     <h3>💪 오늘 운동 완료</h3>
@@ -286,7 +304,14 @@
 <script>
 'use strict';
 const KEY = 'workout-tracker-v1';
-const PRESETS = ['스쿼트','벤치프레스','데드리프트','오버헤드프레스','바벨로우','랫풀다운','풀업','딥스','레그프레스','레그컬','레그익스텐션','런지','인클라인 벤치프레스','팩덱 플라이','케이블 크로스오버','덤벨 숄더프레스','사이드 레터럴 레이즈','덤벨컬','해머컬','케이블 푸시다운','페이스풀','힙쓰러스트','카프레이즈','크런치','플랭크','러닝머신','싸이클','로잉머신'];
+const PRESETS = [
+  '백스쿼트','벤치프레스','인클라인 벤치프레스','데드리프트','레그프레스','레그컬','레그익스텐션','힙 어브덕션','런지','힙쓰러스트','카프레이즈',
+  '팩덱 플라이','케이블 크로스오버','랫풀다운','시티드 로우','어시스트 풀업','풀업','바벨로우','딥스',
+  '숄더프레스','오버헤드프레스','레터럴레이즈','페이스풀',
+  '이지바 컬','덤벨컬','해머컬','케이블 푸시다운',
+  '크런치','플랭크',
+  '존2 러닝 (횟수=분)','존2 러닝 마무리 (횟수=분)','자전거 출근 (횟수=분)','자전거 퇴근 (횟수=분)','러닝머신','로잉머신','싸이클'
+];
 const REST_CHOICES = [30,45,60,90,120,150,180,240,300];
 
 /* ---------- user profile (2026.08) ---------- */
@@ -555,7 +580,12 @@ function renderRoutine() {
     delSet.disabled = ex.sets.length <= 1;
     delSet.onclick = () => { ex.sets.pop(); save(); renderRoutine(); };
 
-    actions.append(addSet, delSet);
+    const histBtn = document.createElement('button');
+    histBtn.className = 'hist-btn';
+    histBtn.textContent = '📈 이전 기록';
+    histBtn.onclick = () => openHistory(ei);
+
+    actions.append(addSet, delSet, histBtn);
     card.appendChild(actions);
     box.appendChild(card);
   });
@@ -827,6 +857,145 @@ function fallbackCopy(txt, done) {
   try { document.execCommand('copy'); done(); }
   catch (e) { prompt('아래 내용을 길게 눌러 복사하세요:', txt); }
   ta.remove();
+}
+
+/* ---------- 운동별 이전 기록 ---------- */
+let histTargetIdx = null;
+
+function setsText(sets) {
+  return sets.map(x => `${x.w}kg×${x.r}${x.done ? '✓' : '✗'}`).join(', ');
+}
+function topSet(sets) {
+  const done = sets.filter(x => x.done);
+  const pool = done.length ? done : sets;
+  return pool.reduce((a, x) => (x.w > a.w ? x : a), pool[0] || { w: 0, r: 0 });
+}
+/* 이름이 조금씩 달라도(이지바컬 / 이지바 컬) 같은 운동으로 묶는다.
+   - 공백·대소문자·괄호설명 제거
+   - 아래 별칭표에 있는 표기는 대표 이름으로 통일 */
+const ALIASES = {
+  '백스쿼트': ['스쿼트','바벨스쿼트','back squat'],
+  '벤치프레스': ['벤치','플랫벤치','바벨벤치프레스','bench press'],
+  '인클라인벤치프레스': ['인클라인벤치','인클라인프레스'],
+  '랫풀다운': ['랫풀','lat pulldown'],
+  '시티드로우': ['시티드케이블로우','케이블로우','seated row'],
+  '어시스트풀업': ['어시스티드풀업','보조풀업','풀업보조','어시스트턱걸이'],
+  '숄더프레스': ['덤벨숄더프레스','머신숄더프레스','shoulder press'],
+  '레터럴레이즈': ['사이드레터럴레이즈','사이드레터럴','래터럴레이즈','lateral raise'],
+  '팩덱플라이': ['펙덱플라이','팩덱','펙덱','체스트플라이','버터플라이'],
+  '이지바컬': ['이지컬','ez바컬','ez컬'],
+  '케이블푸시다운': ['푸시다운','트라이셉스푸시다운'],
+  '레그익스텐션': ['레그익스'],
+  '힙어브덕션': ['아웃타이','힙아브덕션'],
+  '존2러닝': ['존2','zone2','존2런','트레드밀존2'],
+  '자전거출근': ['자전거출근길','출근라이딩'],
+  '자전거퇴근': ['자전거퇴근길','퇴근라이딩']
+};
+const ALIAS_MAP = (() => {
+  const m = {};
+  Object.keys(ALIASES).forEach(canon => {
+    m[canon] = canon;
+    ALIASES[canon].forEach(v => { m[v.replace(/\s+/g, '').toLowerCase()] = canon; });
+  });
+  return m;
+})();
+function norm(x) {
+  let n = (x || '')
+    .replace(/\([^)]*\)/g, '')        // (횟수=분) 같은 설명 제거
+    .replace(/마무리|중량|머신$/g, '')  // '존2 러닝 마무리' → '존2 러닝'
+    .replace(/\s+/g, '')
+    .toLowerCase()
+    .trim();
+  return ALIAS_MAP[n] || n;
+}
+function exerciseHistory(name, limit) {
+  limit = limit || 10;
+  const target = norm(name);
+  if (!target) return [];
+  const out = [];
+  const keys = Object.keys(data).sort().reverse();
+  for (const ds of keys) {
+    if (ds === selDate) continue;
+    const day = data[ds];
+    if (!day || !day.exercises || !day.exercises.length) continue;
+    let exact = null, similar = null;
+    for (const e of day.exercises) {
+      if (!e.sets || !e.sets.length) continue;
+      const n = norm(e.name);
+      if (n === target) { exact = e; break; }
+      if (!similar && n && (n.includes(target) || target.includes(n))) similar = e;
+    }
+    const hit = exact || similar;
+    if (hit) out.push({ ds: ds, ex: hit, exact: !!exact });
+    if (out.length >= limit) break;
+  }
+  return out;
+}
+function openHistory(ei) {
+  const day = data[selDate];
+  const ex = day && day.exercises[ei];
+  if (!ex) return;
+  histTargetIdx = ei;
+  document.getElementById('hist-title').textContent = `📈 ${ex.name}`;
+  const body = document.getElementById('hist-body');
+  const hist = exerciseHistory(ex.name);
+  if (!hist.length) {
+    body.innerHTML = '<div class="hint">이 운동의 이전 기록이 없습니다.<br>오늘이 첫 기록입니다.</div>';
+    document.getElementById('hist-modal').classList.add('show');
+    return;
+  }
+  const exactOnly = hist.filter(h => h.exact);
+  const base = exactOnly.length ? exactOnly : hist;
+  const best = base.reduce((a, h) => {
+    const t = topSet(h.ex.sets);
+    return t.w > a.w ? { w: t.w, r: t.r, ds: h.ds } : a;
+  }, { w: 0, r: 0, ds: '' });
+  const last = topSet(base[0].ex.sets);
+  const cur = topSet(ex.sets);
+  let head = `최고 기록 <b>${best.w}kg × ${best.r}</b>`;
+  if (best.ds) head += ` <span class="hist-meta">(${best.ds})</span>`;
+  head += `<br>직전 세션 최고 <b>${last.w}kg × ${last.r}</b>`;
+  if (cur.w > last.w) head += ` → 오늘 <span style="color:var(--green);font-weight:700">${cur.w}kg</span> ⬆`;
+  body.innerHTML = `<div class="hist-best">${head}</div>`;
+
+  hist.forEach((h, i) => {
+    const [y, m, d] = h.ds.split('-').map(Number);
+    const dow = ['일','월','화','수','목','금','토'][new Date(y, m - 1, d).getDay()];
+    const mins = elapsedMin(data[h.ds]);
+    const item = document.createElement('div');
+    item.className = 'hist-item';
+    const head2 = document.createElement('div');
+    head2.className = 'hist-head';
+    const dt = document.createElement('span');
+    dt.className = 'hist-date';
+    dt.innerHTML = `${m}월 ${d}일 (${dow})` +
+      `<span class="hist-meta">${h.ex.sets.length}세트${mins ? ' · ' + mins + '분' : ''}` +
+      `${h.exact ? '' : ' · ' + h.ex.name}</span>`;
+    const load = document.createElement('button');
+    load.className = 'hist-load';
+    load.textContent = '불러오기';
+    load.onclick = () => loadHistory(i);
+    head2.append(dt, load);
+    const sets = document.createElement('div');
+    sets.className = 'hist-sets';
+    sets.textContent = setsText(h.ex.sets);
+    item.append(head2, sets);
+    body.appendChild(item);
+  });
+  histCache = hist;
+  document.getElementById('hist-modal').classList.add('show');
+}
+let histCache = [];
+function loadHistory(i) {
+  const h = histCache[i];
+  const day = data[selDate];
+  const ex = day && day.exercises[histTargetIdx];
+  if (!h || !ex) return;
+  if (!confirm(`${h.ds} 기록을 오늘 세트로 불러올까요?\n(현재 입력값은 대체되고 완료 표시는 초기화됩니다)`)) return;
+  ex.sets = h.ex.sets.map(x => ({ w: x.w, r: x.r, done: false }));
+  save(); renderRoutine();
+  closeModal('hist-modal');
+  toast('📈 기록을 불러왔습니다');
 }
 
 /* ---------- 운동 시간 ---------- */
