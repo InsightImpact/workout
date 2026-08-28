@@ -331,8 +331,7 @@ const PROFILE = `[사용자 운동 프로필 2026.08]
 function S(w, r) { return { w, r, done: false }; }
 const TEMPLATES = {
   lower: { label: '하체 루틴', exercises: [
-    { name: '고블릿 스쿼트', rest: 60, sets: [S(11,10),S(15,10),S(20,10)] },
-    { name: '백스쿼트', rest: 180, sets: [S(60,5),S(80,3),S(102,5),S(87.5,6),S(87.5,6),S(87.5,6)] },
+    { name: '백스쿼트', rest: 180, sets: [S(20,10),S(40,5),S(60,5),S(80,3),S(102,5),S(87.5,6),S(87.5,6),S(87.5,6)] },
     { name: '루마니안 데드리프트', rest: 120, sets: [S(70,8),S(70,8),S(70,8)] },
     { name: '레그프레스', rest: 120, sets: [S(120,10),S(120,10)] },
     { name: '레그컬', rest: 90, sets: [S(40.5,12),S(40.5,12),S(40.5,12)] },
@@ -378,8 +377,7 @@ const SEED = {
     { name: '자전거 퇴근 (횟수=분)', rest: 60, sets: [{w:0,r:25,done:false}] }
   ]},
   '2026-09-04': { exercises: [
-    { name: '고블릿 스쿼트', rest: 60, sets: [{w:11,r:10,done:false},{w:15,r:10,done:false},{w:20,r:10,done:false}] },
-    { name: '백스쿼트', rest: 180, sets: [{w:60,r:5,done:false},{w:80,r:3,done:false},{w:102,r:5,done:false},{w:87.5,r:6,done:false},{w:87.5,r:6,done:false},{w:87.5,r:6,done:false}] },
+    { name: '백스쿼트', rest: 180, sets: [{w:20,r:10,done:false},{w:40,r:5,done:false},{w:60,r:5,done:false},{w:80,r:3,done:false},{w:102,r:5,done:false},{w:87.5,r:6,done:false},{w:87.5,r:6,done:false},{w:87.5,r:6,done:false}] },
     { name: '루마니안 데드리프트', rest: 120, sets: [{w:70,r:8,done:false},{w:70,r:8,done:false},{w:70,r:8,done:false}] },
     { name: '레그프레스', rest: 120, sets: [{w:120,r:10,done:false},{w:120,r:10,done:false}] },
     { name: '레그컬', rest: 90, sets: [{w:40.5,r:12,done:false},{w:40.5,r:12,done:false},{w:40.5,r:12,done:false}] },
