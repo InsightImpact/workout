@@ -207,7 +207,7 @@
 
 <div id="routine"></div>
 <div class="tpl-row">
-  <button onclick="applyTemplate('lower')">🦵 하체 루틴<span class="sub">톱 102 + 백오프</span></button>
+  <button onclick="applyTemplate('lower')">🦵 하체 루틴<span class="sub">톱 95 + 백오프</span></button>
   <button onclick="applyTemplate('upper')">💪 상체 루틴<span class="sub">톱 62.5 + 백오프</span></button>
   <button onclick="applyTemplate('zone2')">🏃 존2 러닝<span class="sub">30분</span></button>
 </div>
@@ -331,7 +331,7 @@ const PROFILE = `[사용자 운동 프로필 2026.08]
 function S(w, r) { return { w, r, done: false }; }
 const TEMPLATES = {
   lower: { label: '하체 루틴', exercises: [
-    { name: '백스쿼트', rest: 180, sets: [S(20,10),S(40,5),S(60,5),S(80,3),S(102,5),S(87.5,6),S(87.5,6),S(87.5,6)] },
+    { name: '백스쿼트', rest: 180, sets: [S(20,10),S(40,5),S(60,5),S(80,3),S(95,5),S(85,6),S(85,6),S(85,6)] },
     { name: '루마니안 데드리프트', rest: 120, sets: [S(70,8),S(70,8),S(70,8)] },
     { name: '레그프레스', rest: 120, sets: [S(120,10),S(120,10)] },
     { name: '레그컬', rest: 90, sets: [S(40.5,12),S(40.5,12),S(40.5,12)] },
@@ -448,7 +448,16 @@ function load() {
   try { data = JSON.parse(LS.get(KEY)) || {}; } catch(e) { data = {}; }
   let seeded = false;
   Object.entries(SEED).forEach(([ds, day]) => {
-    if (!data[ds] || !data[ds].exercises.length) {
+    const cur = data[ds];
+    const empty = !cur || !cur.exercises || !cur.exercises.length;
+    /* 아직 한 세트도 완료하지 않은 '예정' 날짜는 최신 계획으로 갱신한다.
+       완료 표시(✓)가 하나라도 있으면 실제 기록이므로 절대 건드리지 않는다. */
+    const untouched = !empty && !cur.exercises.some(e => e.sets.some(s => s.done)) && !cur.startedAt;
+    const seedDone = day.exercises.some(e => e.sets.some(s => s.done));
+    if (empty || (untouched && !seedDone)) {
+      data[ds] = JSON.parse(JSON.stringify(day));
+      seeded = true;
+    } else if (untouched && seedDone) {
       data[ds] = JSON.parse(JSON.stringify(day));
       seeded = true;
     }
