@@ -306,7 +306,7 @@
 const KEY = 'workout-tracker-v1';
 const PRESETS = [
   '백스쿼트','고블릿 스쿼트','벤치프레스','인클라인 벤치프레스','루마니안 데드리프트','데드리프트','레그프레스','레그컬','레그익스텐션','힙 어브덕션','런지','힙쓰러스트','카프레이즈',
-  '팩덱 플라이','케이블 크로스오버','랫풀다운','시티드 로우','어시스트 풀업','풀업','바벨로우','딥스',
+  '팩덱 플라이','리버스 팩덱','케이블 크로스오버','랫풀다운','시티드 로우','어시스트 풀업','풀업','바벨로우','딥스',
   '숄더프레스','오버헤드프레스','레터럴레이즈','페이스풀',
   '이지바 컬','덤벨컬','해머컬','케이블 푸시다운',
   '크런치','플랭크',
@@ -364,73 +364,77 @@ let viewYear, viewMonth, selDate;
 
 /* Claude가 대화에서 넣어준 기록 — 해당 날짜가 비어 있을 때만 1회 병합됨 */
 const SEED = {
-  '2026-08-30': { exercises: [
-    { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:60,done:false}] }
+  '2026-08-13': { exercises: [
+    { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:30,done:true}] },
+    { name: '로잉머신 500m 2:40페이스 (횟수=분)', rest: 60, sets: [{w:0,r:11,done:true}] },
+    { name: '백스쿼트', rest: 180, sets: [{w:25,r:10,done:true}, {w:47,r:10,done:true}, {w:56,r:10,done:true}, {w:56,r:10,done:true}, {w:56,r:10,done:true}] }
   ]},
-  '2026-09-01': { exercises: [
-    { name: '자전거 출근 (횟수=분)', rest: 60, sets: [{w:0,r:22,done:false}] },
-    { name: '벤치프레스', rest: 180, sets: [{w:20,r:10,done:false},{w:40,r:5,done:false},{w:50,r:3,done:false},{w:62.5,r:5,done:false},{w:55,r:8,done:false},{w:55,r:8,done:false},{w:55,r:8,done:false}] },
-    { name: '팩덱 플라이', rest: 90, sets: [{w:40.5,r:12,done:false},{w:40.5,r:12,done:false},{w:40.5,r:12,done:false}] },
-    { name: '랫풀다운', rest: 90, sets: [{w:40,r:10,done:false},{w:40,r:10,done:false},{w:40,r:10,done:false}] },
-    { name: '숄더프레스', rest: 90, sets: [{w:36,r:10,done:false},{w:36,r:10,done:false},{w:36,r:10,done:false}] },
-    { name: '레터럴레이즈', rest: 60, sets: [{w:9,r:12,done:false},{w:9,r:12,done:false},{w:9,r:12,done:false}] },
-    { name: '자전거 퇴근 (횟수=분)', rest: 60, sets: [{w:0,r:25,done:false}] }
-  ]},
-  '2026-09-04': { exercises: [
-    { name: '백스쿼트', rest: 180, sets: [{w:20,r:10,done:false},{w:40,r:5,done:false},{w:60,r:5,done:false},{w:80,r:3,done:false},{w:102,r:5,done:false},{w:87.5,r:6,done:false},{w:87.5,r:6,done:false},{w:87.5,r:6,done:false}] },
-    { name: '루마니안 데드리프트', rest: 120, sets: [{w:70,r:8,done:false},{w:70,r:8,done:false},{w:70,r:8,done:false}] },
-    { name: '레그프레스', rest: 120, sets: [{w:120,r:10,done:false},{w:120,r:10,done:false}] },
-    { name: '레그컬', rest: 90, sets: [{w:40.5,r:12,done:false},{w:40.5,r:12,done:false},{w:40.5,r:12,done:false}] },
-    { name: '존2 러닝 마무리 (횟수=분)', rest: 60, sets: [{w:0,r:15,done:false}] }
-  ]},
-  '2026-08-23': { exercises: [
-    { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:30,done:false}] }
-  ]},
-  '2026-08-25': { exercises: [
-    { name: '벤치프레스', rest: 180, sets: [{w:20,r:8,done:false},{w:40,r:5,done:false},{w:50,r:3,done:false},{w:55,r:6,done:false},{w:55,r:6,done:false},{w:55,r:6,done:false}] },
-    { name: '팩덱 플라이', rest: 90, sets: [{w:40.5,r:12,done:false},{w:40.5,r:12,done:false},{w:40.5,r:12,done:false}] },
-    { name: '랫풀다운', rest: 90, sets: [{w:36,r:10,done:false},{w:36,r:10,done:false},{w:36,r:10,done:false}] },
-    { name: '숄더프레스', rest: 90, sets: [{w:34,r:10,done:false},{w:34,r:10,done:false},{w:34,r:10,done:false}] },
-    { name: '레터럴레이즈', rest: 60, sets: [{w:9,r:12,done:false},{w:9,r:12,done:false},{w:9,r:12,done:false}] },
-    { name: '존2 러닝 마무리 (횟수=분)', rest: 60, sets: [{w:0,r:15,done:false}] }
-  ]},
-  '2026-08-28': { exercises: [
-    { name: '백스쿼트', rest: 180, sets: [{w:20,r:10,done:false},{w:50,r:8,done:false},{w:65,r:5,done:false},{w:75,r:3,done:false},{w:80,r:8,done:false},{w:80,r:8,done:false},{w:80,r:8,done:false}] },
-    { name: '데드리프트', rest: 180, sets: [{w:60,r:8,done:false},{w:60,r:8,done:false}] },
-    { name: '레그프레스', rest: 120, sets: [{w:90,r:10,done:false},{w:90,r:10,done:false},{w:90,r:10,done:false}] },
-    { name: '레그컬', rest: 90, sets: [{w:31.5,r:15,done:false},{w:31.5,r:15,done:false},{w:31.5,r:15,done:false}] },
-    { name: '존2 러닝 마무리 (횟수=분)', rest: 60, sets: [{w:0,r:15,done:false}] }
+  '2026-08-14': { exercises: [
+    { name: '벤치프레스', rest: 90, sets: [{w:20,r:10,done:true}, {w:42,r:8,done:true}, {w:42,r:10,done:true}, {w:50,r:6,done:true}, {w:60,r:5,done:true}] },
+    { name: '팩덱플라이', rest: 90, sets: [{w:37.5,r:10,done:true}, {w:40.5,r:10,done:true}, {w:40.5,r:10,done:true}] },
+    { name: '랫풀다운', rest: 90, sets: [{w:31.5,r:10,done:true}, {w:31.5,r:10,done:true}, {w:31.5,r:10,done:true}] },
+    { name: '숄더프레스', rest: 90, sets: [{w:31.5,r:10,done:true}, {w:31.5,r:10,done:true}, {w:31.5,r:10,done:true}] },
+    { name: '레터럴레이즈', rest: 60, sets: [{w:9,r:12,done:true}, {w:9,r:12,done:true}, {w:9,r:12,done:true}] },
+    { name: '존2 러닝 마무리 (횟수=분)', rest: 60, sets: [{w:0,r:15,done:true}] }
   ]},
   '2026-08-16': { exercises: [
     { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:30,done:false}] }
   ]},
   '2026-08-18': { exercises: [
-    { name: '백스쿼트', rest: 180, sets: [{w:20,r:8,done:false},{w:42,r:5,done:false},{w:60,r:5,done:false},{w:65,r:8,done:false},{w:65,r:8,done:false},{w:65,r:8,done:false}] },
-    { name: '데드리프트', rest: 180, sets: [{w:60,r:8,done:false},{w:60,r:8,done:false}] },
-    { name: '레그프레스', rest: 120, sets: [{w:90,r:10,done:false},{w:90,r:10,done:false},{w:90,r:10,done:false}] },
-    { name: '레그컬', rest: 90, sets: [{w:31.5,r:15,done:false},{w:31.5,r:15,done:false},{w:31.5,r:15,done:false}] },
-    { name: '존2 러닝 마무리 (횟수=분)', rest: 60, sets: [{w:0,r:15,done:false}] }
+    { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:40,done:true}] }
   ]},
   '2026-08-21': { exercises: [
-    { name: '벤치프레스', rest: 180, sets: [{w:20,r:8,done:false},{w:40,r:5,done:false},{w:50,r:3,done:false},{w:55,r:6,done:false},{w:55,r:6,done:false},{w:55,r:6,done:false}] },
-    { name: '팩덱 플라이', rest: 90, sets: [{w:40.5,r:12,done:false},{w:40.5,r:12,done:false},{w:40.5,r:12,done:false}] },
-    { name: '랫풀다운', rest: 90, sets: [{w:36,r:10,done:false},{w:36,r:10,done:false},{w:36,r:10,done:false}] },
-    { name: '숄더프레스', rest: 90, sets: [{w:34,r:10,done:false},{w:34,r:10,done:false},{w:34,r:10,done:false}] },
-    { name: '레터럴레이즈', rest: 60, sets: [{w:9,r:12,done:false},{w:9,r:12,done:false},{w:9,r:12,done:false}] },
+    { name: '스쿼트', rest: 90, sets: [{w:20,r:10,done:true}, {w:50,r:8,done:true}, {w:50,r:8,done:true}, {w:60,r:6,done:true}, {w:70,r:5,done:true}, {w:93,r:5,done:true}, {w:93,r:5,done:true}] },
+    { name: '존2 러닝 마무리 (횟수=분)', rest: 60, sets: [{w:0,r:30,done:true}] }
+  ]},
+  '2026-08-23': { exercises: [
+    { name: '자전거 (횟수=분)', rest: 90, sets: [{w:0,r:202,done:true}] }
+  ]},
+  '2026-08-24': { exercises: [
+    { name: '어시스트풀업', rest: 90, sets: [{w:58.5,r:10,done:true}, {w:58.5,r:10,done:true}, {w:58.5,r:10,done:true}] },
+    { name: '시티드로우', rest: 90, sets: [{w:40.5,r:10,done:true}, {w:40.5,r:10,done:true}, {w:40.5,r:10,done:true}] }
+  ]},
+  '2026-08-25': { exercises: [
+    { name: '자전거 출근', rest: 60, sets: [{w:0,r:22,done:true}] },
+    { name: '벤치프레스', rest: 90, sets: [{w:20,r:10,done:true}, {w:40,r:5,done:true}, {w:50,r:5,done:true}, {w:60,r:5,done:true}, {w:60,r:5,done:true}, {w:60,r:5,done:true}] },
+    { name: '인클라인 벤치프레스', rest: 90, sets: [{w:28,r:5,done:true}] },
+    { name: '팩덱 플라이', rest: 90, sets: [{w:40.5,r:12,done:true}, {w:40.5,r:12,done:true}] },
+    { name: '랫풀다운', rest: 90, sets: [{w:36,r:10,done:true}, {w:36,r:10,done:true}, {w:36,r:10,done:true}] },
+    { name: '숄더프레스', rest: 90, sets: [{w:34,r:10,done:true}, {w:34,r:10,done:true}, {w:34,r:10,done:true}] },
+    { name: '이지바 컬', rest: 90, sets: [{w:23,r:10,done:true}, {w:23,r:10,done:true}, {w:23,r:10,done:true}] },
+    { name: '레터럴레이즈', rest: 60, sets: [{w:9,r:10,done:true}, {w:9,r:12,done:true}, {w:9,r:12,done:true}] }
+  ]},
+  '2026-08-28': { exercises: [
+    { name: '고블린스쿼트', rest: 90, sets: [{w:11,r:10,done:true}, {w:15,r:10,done:true}, {w:20,r:10,done:true}] },
+    { name: '레그프레스', rest: 120, sets: [{w:120,r:10,done:true}] },
+    { name: '백스쿼트', rest: 90, sets: [{w:86,r:5,done:true}, {w:86,r:5,done:true}, {w:90,r:5,done:true}, {w:102,r:5,done:true}] },
+    { name: '레그컬', rest: 90, sets: [{w:31.5,r:12,done:true}, {w:36.5,r:12,done:true}, {w:40.5,r:12,done:true}] },
+    { name: '레그익스텐션', rest: 90, sets: [{w:40.5,r:12,done:true}, {w:40.5,r:12,done:true}, {w:40.5,r:12,done:true}] },
+    { name: '데드리프트', rest: 90, sets: [{w:60,r:10,done:true}, {w:60,r:10,done:true}, {w:60,r:10,done:true}] }
+  ]},
+  '2026-08-30': { exercises: [
+    { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:60,done:true}] }
+  ]},
+  '2026-08-31': { exercises: [
+    { name: '어시스트 풀업', rest: 90, sets: [{w:67.5,r:10,done:true}, {w:58.5,r:10,done:true}, {w:58.5,r:10,done:true}] },
+    { name: '시티드 로우', rest: 90, sets: [{w:40.5,r:10,done:true}, {w:40.5,r:10,done:true}, {w:40.5,r:10,done:true}] },
+    { name: '리버스팩덱', rest: 90, sets: [{w:22.5,r:15,done:true}, {w:22.5,r:12,done:true}, {w:18.5,r:12,done:true}, {w:18.5,r:12,done:true}] },
+    { name: '존2 러닝 (횟수=분)', rest: 90, sets: [{w:0,r:20,done:true}] }
+  ]},
+  '2026-09-01': { exercises: [
+    { name: '벤치프레스', rest: 180, sets: [{w:20,r:10,done:true}, {w:50,r:8,done:true}, {w:60,r:5,done:true}, {w:60,r:5,done:true}, {w:60,r:5,done:true}, {w:50,r:8,done:true}] },
+    { name: '숄더프레스', rest: 90, sets: [{w:36,r:10,done:true}] },
+    { name: '자전거 퇴근 (횟수=분)', rest: 60, sets: [{w:0,r:20,done:true}] }
+  ]},
+  '2026-09-04': { exercises: [
+    { name: '백스쿼트', rest: 180, sets: [{w:20,r:10,done:false}, {w:40,r:5,done:false}, {w:60,r:5,done:false}, {w:80,r:3,done:false}, {w:95,r:5,done:false}, {w:85,r:6,done:false}, {w:85,r:6,done:false}, {w:85,r:6,done:false}] },
+    { name: '루마니안 데드리프트', rest: 120, sets: [{w:70,r:8,done:false}, {w:70,r:8,done:false}, {w:70,r:8,done:false}] },
+    { name: '레그프레스', rest: 120, sets: [{w:120,r:10,done:false}, {w:120,r:10,done:false}] },
+    { name: '레그컬', rest: 90, sets: [{w:40.5,r:12,done:false}, {w:40.5,r:12,done:false}, {w:40.5,r:12,done:false}] },
     { name: '존2 러닝 마무리 (횟수=분)', rest: 60, sets: [{w:0,r:15,done:false}] }
   ]},
-  '2026-08-13': { exercises: [
-    { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:30,done:true}] },
-    { name: '로잉머신 500m 2:40페이스 (횟수=분)', rest: 60, sets: [{w:0,r:11,done:true}] },
-    { name: '백스쿼트', rest: 180, sets: [{w:60,r:5,done:true},{w:60,r:5,done:true},{w:60,r:5,done:true},{w:60,r:5,done:true}] }
-  ]},
-  '2026-08-14': { exercises: [
-    { name: '벤치프레스', rest: 180, sets: [{w:20,r:10,done:true},{w:42,r:8,done:true},{w:42,r:10,done:true},{w:50,r:6,done:true},{w:60,r:5,done:true}] },
-    { name: '팩덱 플라이', rest: 90, sets: [{w:37.5,r:10,done:true},{w:40.5,r:10,done:true},{w:40.5,r:10,done:true}] },
-    { name: '랫풀다운', rest: 90, sets: [{w:31.5,r:10,done:true},{w:31.5,r:10,done:true},{w:31.5,r:10,done:true}] },
-    { name: '숄더프레스', rest: 90, sets: [{w:31.5,r:10,done:true},{w:31.5,r:10,done:true},{w:31.5,r:10,done:true}] },
-    { name: '레터럴레이즈', rest: 60, sets: [{w:9,r:12,done:true},{w:9,r:12,done:true},{w:9,r:12,done:true}] },
-    { name: '존2 러닝 마무리 (횟수=분)', rest: 60, sets: [{w:0,r:15,done:true}] }
+  '2026-09-06': { exercises: [
+    { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:45,done:false}] }
   ]}
 };
 /* 저장소가 막힌 환경(파일 미리보기 등)에서도 앱이 죽지 않도록 감싼다 */
