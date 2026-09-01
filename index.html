@@ -162,6 +162,13 @@
     border-radius: 12px; padding: 11px 13px; font-size: 12.5px; line-height: 1.55; margin-bottom: 10px;
   }
   #storage-warn.show { display: block; }
+  #update-bar {
+    display: none; align-items: center; justify-content: space-between; gap: 10px;
+    background: var(--accent); color: #fff; border-radius: 12px; padding: 12px 14px;
+    font-size: 13.5px; font-weight: 600; margin-bottom: 10px;
+  }
+  #update-bar.show { display: flex; }
+  #update-bar button { background: rgba(255,255,255,.25); color: #fff; padding: 8px 12px; font-size: 13px; font-weight: 700; flex-shrink: 0; }
   #storage-warn b { color: #b2600a; }
   .toast {
     position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(90px + env(safe-area-inset-bottom));
@@ -186,6 +193,7 @@
   </span>
 </h1>
 
+<div id="update-bar"><span>새 버전이 있습니다</span><button onclick="applyUpdate()">🔄 업데이트</button></div>
 <div id="storage-warn"></div>
 
 <div class="cal">
@@ -265,6 +273,7 @@
       <button onclick="closeModal('menu-modal'); copySummary()">📋 기록 텍스트 복사</button>
       <button onclick="closeModal('menu-modal'); exportData()">💾 백업 파일 저장</button>
       <button onclick="closeModal('menu-modal'); importData()">📂 백업 파일에서 복원</button>
+      <button onclick="closeModal('menu-modal'); checkUpdate(true)">🔄 업데이트 확인</button>
     </div>
     <div class="row"><button onclick="closeModal('menu-modal')">닫기</button></div>
   </div>
@@ -304,6 +313,7 @@
 <script>
 'use strict';
 const KEY = 'workout-tracker-v1';
+const BUILD = '2026-09-02.1';  /* 배포할 때마다 올린다 — 캐시 감지용 */
 const PRESETS = [
   '백스쿼트','고블릿 스쿼트','벤치프레스','인클라인 벤치프레스','루마니안 데드리프트','데드리프트','레그프레스','레그컬','레그익스텐션','힙 어브덕션','런지','힙쓰러스트','카프레이즈',
   '팩덱 플라이','리버스 팩덱','케이블 크로스오버','랫풀다운','시티드 로우','어시스트 풀업','풀업','바벨로우','딥스',
@@ -1110,6 +1120,31 @@ function importData() {
   i.click();
 }
 
+/* ---------- 버전 확인 (캐시된 구버전 자동 감지) ---------- */
+let newBuild = null;
+async function checkUpdate(manual) {
+  try {
+    const res = await fetch(location.pathname + '?cb=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) throw new Error('fetch failed');
+    const txt = await res.text();
+    const m = txt.match(/const BUILD = '([^']+)'/);
+    if (m && m[1] !== BUILD) {
+      newBuild = m[1];
+      document.getElementById('update-bar').classList.add('show');
+      if (manual) applyUpdate();
+      return true;
+    }
+    if (manual) toast('최신 버전입니다 (' + BUILD + ')');
+    return false;
+  } catch (e) {
+    if (manual) toast('업데이트 확인 실패 — 네트워크를 확인하세요');
+    return false;
+  }
+}
+function applyUpdate() {
+  location.replace(location.pathname + '?v=' + (newBuild || Date.now()));
+}
+
 /* ---------- 오프라인 캐시 등록 ---------- */
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
   window.addEventListener('load', () => {
@@ -1127,6 +1162,7 @@ selDate = todayStr();
 checkStorage();
 renderCalendar();
 renderRoutine();
+setTimeout(() => checkUpdate(false), 800);
 console.log('workout-tracker artifact loaded, days with data:', Object.keys(data).length);
 </script>
 </body>
