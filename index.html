@@ -174,6 +174,17 @@
   #update-bar.show { display: flex; }
   #update-bar button { background: rgba(255,255,255,.25); color: #fff; padding: 8px 12px; font-size: 13px; font-weight: 700; flex-shrink: 0; }
   #storage-warn b { color: #b2600a; }
+  #ver-bar {
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+    margin: 18px 0 calc(14px + env(safe-area-inset-bottom));
+    font-size: 11.5px; color: var(--muted); letter-spacing: .2px;
+    cursor: pointer; user-select: none; padding: 8px;
+  }
+  #ver-bar:active { opacity: .5; }
+  #ver-txt { font-variant-numeric: tabular-nums; font-weight: 600; }
+  #ver-state { font-size: 11px; padding: 2px 7px; border-radius: 999px; background: #eceff3; }
+  #ver-state.ok  { background: #e3f5e8; color: #1c7a3d; }
+  #ver-state.new { background: #ffe9e3; color: #c23c14; font-weight: 700; }
   .toast {
     position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(90px + env(safe-area-inset-bottom));
     background: #1c2130; color: #fff; padding: 11px 18px; border-radius: 12px; font-size: 13.5px;
@@ -277,7 +288,7 @@
       <button onclick="closeModal('menu-modal'); copySummary()">📋 기록 텍스트 복사</button>
       <button onclick="closeModal('menu-modal'); exportData()">💾 백업 파일 저장</button>
       <button onclick="closeModal('menu-modal'); importData()">📂 백업 파일에서 복원</button>
-      <button onclick="closeModal('menu-modal'); checkUpdate(true)">🔄 업데이트 확인</button>
+      <button onclick="closeModal('menu-modal'); checkUpdate(true)">🔄 업데이트 확인 <span id="menu-ver" style="opacity:.55;font-weight:600"></span></button>
     </div>
     <div class="row"><button onclick="closeModal('menu-modal')">닫기</button></div>
   </div>
@@ -314,11 +325,15 @@
   </div>
 </div>
 
+<div id="ver-bar" onclick="checkUpdate(true)">
+  <span id="ver-txt">v—</span><span id="ver-state">확인 중…</span>
+</div>
+
 <script>
 'use strict';
 const KEY = 'workout-tracker-v1';
 const SKIP_KEY = 'workout-tracker-skip';  /* 사용자가 비운 날짜 — SEED가 되살리지 않는다 */
-const BUILD = '2026-09-08.4';  /* 배포할 때마다 올린다 — 캐시 감지용 */
+const BUILD = '2026-09-08.5';  /* 배포할 때마다 올린다 — 캐시 감지용 */
 const PRESET_GROUPS = [
   ['🦵 하체', ['백스쿼트','고블릿 스쿼트','레그프레스','레그컬','레그익스텐션','루마니안 데드리프트','데드리프트','런지','덤벨런지','힙쓰러스트','힙 어브덕션','카프레이즈']],
   ['🫁 가슴', ['벤치프레스','인클라인 벤치프레스','팩덱 플라이','케이블 크로스오버','딥스']],
@@ -1169,7 +1184,8 @@ function renderSessionTime() {
 setInterval(renderSessionTime, 20000);
 
 /* ---------- 운동 완료 ---------- */
-function openMenu() { document.getElementById('menu-modal').classList.add('show'); }
+function openMenu() {
+  const mv = document.getElementById('menu-ver'); if (mv) mv.textContent = 'v' + BUILD; document.getElementById('menu-modal').classList.add('show'); }
 
 function finishWorkout() {
   const day = data[selDate];
@@ -1228,7 +1244,13 @@ function importData() {
 
 /* ---------- 버전 확인 (캐시된 구버전 자동 감지) ---------- */
 let newBuild = null;
+function setVer(state, cls) {
+  const t = document.getElementById('ver-txt'), s = document.getElementById('ver-state');
+  if (t) t.textContent = 'v' + BUILD;
+  if (s) { s.textContent = state; s.className = cls || ''; }
+}
 async function checkUpdate(manual) {
+  setVer('확인 중…', '');
   try {
     const res = await fetch(location.pathname + '?cb=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) throw new Error('fetch failed');
@@ -1236,13 +1258,16 @@ async function checkUpdate(manual) {
     const m = txt.match(/const BUILD = '([^']+)'/);
     if (m && m[1] !== BUILD) {
       newBuild = m[1];
+      setVer('새 버전 v' + m[1], 'new');
       document.getElementById('update-bar').classList.add('show');
       if (manual) applyUpdate();
       return true;
     }
-    if (manual) toast('최신 버전입니다 (' + BUILD + ')');
+    setVer('최신 ✓', 'ok');
+    if (manual) toast('최신 버전입니다 (v' + BUILD + ')');
     return false;
   } catch (e) {
+    setVer('확인 실패 · 탭하면 재시도', '');
     if (manual) toast('업데이트 확인 실패 — 네트워크를 확인하세요');
     return false;
   }
@@ -1268,6 +1293,7 @@ selDate = todayStr();
 checkStorage();
 renderCalendar();
 renderRoutine();
+setVer('확인 중…', '');
 setTimeout(() => checkUpdate(false), 800);
 console.log('workout-tracker artifact loaded, days with data:', Object.keys(data).length);
 </script>
