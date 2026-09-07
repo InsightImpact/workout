@@ -94,6 +94,7 @@
   .set-actions { display: flex; gap: 8px; margin-top: 10px; }
   .set-actions button { flex: 1; padding: 11px 4px; font-size: 13px; font-weight: 600; background: var(--card2); }
   .hist-btn { color: var(--accent2); }
+  .form-btn { color: #c2410c; }
   .hist-best { background: var(--card2); border-radius: 10px; padding: 11px 12px; font-size: 13px; line-height: 1.6; margin-bottom: 12px; }
   .hist-best b { color: var(--accent2); }
   .hist-item { border-top: 1px solid var(--border); padding: 12px 0; }
@@ -316,7 +317,7 @@
 <script>
 'use strict';
 const KEY = 'workout-tracker-v1';
-const BUILD = '2026-09-08.1';  /* 배포할 때마다 올린다 — 캐시 감지용 */
+const BUILD = '2026-09-08.2';  /* 배포할 때마다 올린다 — 캐시 감지용 */
 const PRESET_GROUPS = [
   ['🦵 하체', ['백스쿼트','고블릿 스쿼트','레그프레스','레그컬','레그익스텐션','루마니안 데드리프트','데드리프트','런지','덤벨런지','힙쓰러스트','힙 어브덕션','카프레이즈']],
   ['🫁 가슴', ['벤치프레스','인클라인 벤치프레스','팩덱 플라이','케이블 크로스오버','딥스']],
@@ -629,10 +630,15 @@ function renderRoutine() {
 
     const histBtn = document.createElement('button');
     histBtn.className = 'hist-btn';
-    histBtn.textContent = '📈 이전 기록';
+    histBtn.textContent = '📈 기록';
     histBtn.onclick = () => openHistory(ei);
 
-    actions.append(addSet, delSet, histBtn);
+    const formBtn = document.createElement('button');
+    formBtn.className = 'form-btn';
+    formBtn.textContent = '🎥 자세';
+    formBtn.onclick = () => openForm(ex.name);
+
+    actions.append(addSet, delSet, histBtn, formBtn);
     card.appendChild(actions);
     box.appendChild(card);
   });
@@ -930,6 +936,43 @@ function fallbackCopy(txt, done) {
   try { document.execCommand('copy'); done(); }
   catch (e) { prompt('아래 내용을 길게 눌러 복사하세요:', txt); }
   ta.remove();
+}
+
+/* ---------- 자세 영상 (유튜브 검색) ---------- */
+const FORM_QUERY = {
+  '백스쿼트': '백스쿼트 자세',
+  '고블릿 스쿼트': '고블릿 스쿼트 자세',
+  '루마니안 데드리프트': '루마니안 데드리프트 자세 RDL',
+  '데드리프트': '데드리프트 자세',
+  '레그프레스': '레그프레스 자세',
+  '레그컬': '레그컬 자세',
+  '레그익스텐션': '레그익스텐션 자세',
+  '덤벨런지': '덤벨 런지 자세',
+  '힙 어브덕션': '힙 어브덕션 머신 자세',
+  '벤치프레스': '벤치프레스 자세',
+  '인클라인 벤치프레스': '인클라인 벤치프레스 자세',
+  '팩덱 플라이': '펙덱 플라이 자세',
+  '리버스 팩덱': '리버스 펙덱 후면삼각근 자세',
+  '랫풀다운': '랫풀다운 자세',
+  '시티드 로우': '시티드 로우 자세',
+  '어시스트 풀업': '어시스트 풀업 머신 자세',
+  '숄더프레스': '숄더프레스 자세',
+  '레터럴레이즈': '사이드 레터럴 레이즈 자세',
+  '페이스풀': '페이스풀 자세',
+  '이지바 컬': '이지바 컬 자세',
+  '케이블 푸시다운': '케이블 푸시다운 자세'
+};
+function openForm(name) {
+  const key = norm(name);
+  /* 유산소·이동 종목은 자세 영상이 의미 없음 */
+  if (/러닝|자전거|사이클|싸이클|로잉|워킹|걷기/.test(key)) {
+    toast('유산소 종목은 자세 영상이 없습니다');
+    return;
+  }
+  let q = null;
+  for (const k in FORM_QUERY) { if (norm(k) === key) { q = FORM_QUERY[k]; break; } }
+  if (!q) q = (name || '').replace(/\([^)]*\)/g, '').trim() + ' 자세';
+  window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent(q), '_blank');
 }
 
 /* ---------- 운동별 이전 기록 ---------- */
