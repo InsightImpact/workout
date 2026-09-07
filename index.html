@@ -318,7 +318,7 @@
 'use strict';
 const KEY = 'workout-tracker-v1';
 const SKIP_KEY = 'workout-tracker-skip';  /* 사용자가 비운 날짜 — SEED가 되살리지 않는다 */
-const BUILD = '2026-09-08.3';  /* 배포할 때마다 올린다 — 캐시 감지용 */
+const BUILD = '2026-09-08.4';  /* 배포할 때마다 올린다 — 캐시 감지용 */
 const PRESET_GROUPS = [
   ['🦵 하체', ['백스쿼트','고블릿 스쿼트','레그프레스','레그컬','레그익스텐션','루마니안 데드리프트','데드리프트','런지','덤벨런지','힙쓰러스트','힙 어브덕션','카프레이즈']],
   ['🫁 가슴', ['벤치프레스','인클라인 벤치프레스','팩덱 플라이','케이블 크로스오버','딥스']],
@@ -448,11 +448,11 @@ const SEED = {
     { name: '숄더프레스', rest: 90, sets: [{w:36,r:10,done:true}] },
     { name: '자전거 퇴근 (횟수=분)', rest: 60, sets: [{w:0,r:20,done:true}] }
   ]},
-  '2026-09-04': { exercises: [
-    { name: '백스쿼트', rest: 180, sets: [{w:20,r:10,done:false}, {w:40,r:5,done:false}, {w:60,r:5,done:false}, {w:80,r:3,done:false}, {w:95,r:5,done:false}, {w:85,r:6,done:false}, {w:85,r:6,done:false}, {w:85,r:6,done:false}] },
-    { name: '루마니안 데드리프트', rest: 120, sets: [{w:70,r:8,done:false}, {w:70,r:8,done:false}, {w:70,r:8,done:false}] },
-    { name: '레그프레스', rest: 120, sets: [{w:120,r:10,done:false}, {w:120,r:10,done:false}] },
-    { name: '레그컬', rest: 90, sets: [{w:40.5,r:12,done:false}, {w:40.5,r:12,done:false}, {w:40.5,r:12,done:false}] },
+  '2026-09-10': { exercises: [
+    { name: '백스쿼트', rest: 180, sets: [{w:20,r:10,done:false},{w:40,r:5,done:false},{w:60,r:5,done:false},{w:80,r:3,done:false},{w:95,r:5,done:false},{w:85,r:6,done:false},{w:85,r:6,done:false},{w:85,r:6,done:false}] },
+    { name: '루마니안 데드리프트', rest: 120, sets: [{w:70,r:8,done:false},{w:70,r:8,done:false},{w:70,r:8,done:false}] },
+    { name: '레그프레스', rest: 120, sets: [{w:120,r:10,done:false},{w:120,r:10,done:false}] },
+    { name: '레그컬', rest: 90, sets: [{w:40.5,r:12,done:false},{w:40.5,r:12,done:false},{w:40.5,r:12,done:false}] },
     { name: '존2 러닝 마무리 (횟수=분)', rest: 60, sets: [{w:0,r:15,done:false}] }
   ]},
   '2026-09-07': { exercises: [
@@ -461,9 +461,6 @@ const SEED = {
     { name: '덤벨런지', rest: 90, sets: [{w:9,r:10,done:true},{w:9,r:10,done:true},{w:9,r:10,done:true}] },
     { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:20,done:false}] }
   ]},
-  '2026-09-06': { exercises: [
-    { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:45,done:false}] }
-  ]}
 };
 /* 저장소가 막힌 환경(파일 미리보기 등)에서도 앱이 죽지 않도록 감싼다 */
 let storageOK = true;
