@@ -333,7 +333,7 @@
 'use strict';
 const KEY = 'workout-tracker-v1';
 const SKIP_KEY = 'workout-tracker-skip';  /* 사용자가 비운 날짜 — SEED가 되살리지 않는다 */
-const BUILD = '2026-09-08.8';  /* 배포할 때마다 올린다 — 캐시 감지용 */
+const BUILD = '2026-09-11.1';  /* 배포할 때마다 올린다 — 캐시 감지용 */
 const PRESET_GROUPS = [
   ['🦵 하체', ['백스쿼트','고블릿 스쿼트','레그프레스','레그컬','레그익스텐션','루마니안 데드리프트','데드리프트','런지','덤벨런지','힙쓰러스트','힙 어브덕션','카프레이즈']],
   ['🫁 가슴', ['벤치프레스','인클라인 벤치프레스','팩덱 플라이','케이블 크로스오버','딥스']],
@@ -363,11 +363,10 @@ const PROFILE = `[사용자 운동 프로필 2026.08]
 function S(w, r) { return { w, r, done: false }; }
 const TEMPLATES = {
   lower: { label: '하체 루틴', exercises: [
-    { name: '백스쿼트', rest: 180, sets: [S(20,10),S(40,5),S(60,5),S(80,3),S(95,5),S(85,6),S(85,6),S(85,6)] },
-    { name: '루마니안 데드리프트', rest: 120, sets: [S(70,8),S(70,8),S(70,8)] },
-    { name: '레그프레스', rest: 120, sets: [S(120,10),S(120,10)] },
+    { name: '백스쿼트', rest: 180, sets: [S(20,10),S(60,5),S(83.5,3),S(95,3),S(105,3),S(87.5,6),S(87.5,6),S(87.5,6)] },
+    { name: '루마니안 데드리프트', rest: 150, sets: [S(88,5),S(88,5),S(88,5)] },
     { name: '레그컬', rest: 90, sets: [S(40.5,12),S(40.5,12),S(40.5,12)] },
-    { name: '존2 러닝 마무리 (횟수=분)', rest: 60, sets: [S(0,15)] }
+    { name: '레그프레스', rest: 120, sets: [S(130,10),S(130,10)] }
   ]},
   upper: { label: '상체 루틴', exercises: [
     { name: '벤치프레스', rest: 180, sets: [S(20,10),S(50,5),S(60,5),S(66,3),S(56,8),S(56,8),S(56,8)] },
@@ -473,15 +472,32 @@ const SEED = {
   '2026-09-09': { exercises: [
     { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:30,done:false}] }
   ]},
-  '2026-09-12': { exercises: [
+  '2026-09-11': { exercises: [
+    { name: '백스쿼트', rest: 180, sets: [{w:20,r:10,done:true},{w:60,r:5,done:true},{w:60,r:5,done:true},{w:83.5,r:3,done:true},{w:92.5,r:5,done:true},{w:102,r:5,done:true},{w:83,r:6,done:true},{w:83,r:6,done:true},{w:83,r:6,done:true}] },
+    { name: '루마니안 데드리프트', rest: 150, sets: [{w:83.5,r:5,done:true},{w:83.5,r:5,done:true},{w:83.5,r:5,done:true}] },
+    { name: '레그프레스', rest: 120, sets: [{w:120,r:10,done:true},{w:120,r:10,done:true}] }
+  ]},
+  '2026-09-15': { exercises: [
+    { name: '벤치프레스', rest: 180, sets: [{w:20,r:10,done:false},{w:50,r:5,done:false},{w:60,r:5,done:false},{w:66,r:3,done:false},{w:56,r:8,done:false},{w:56,r:8,done:false},{w:56,r:8,done:false}] },
+    { name: '어시스트 풀업', rest: 120, sets: [{w:47.5,r:10,done:false},{w:47.5,r:10,done:false},{w:47.5,r:10,done:false}] },
+    { name: '시티드 로우', rest: 90, sets: [{w:47.5,r:10,done:false},{w:47.5,r:10,done:false},{w:47.5,r:10,done:false}] },
+    { name: '숄더프레스', rest: 90, sets: [{w:38,r:10,done:false},{w:38,r:10,done:false},{w:38,r:10,done:false}] },
+    { name: '팩덱 플라이', rest: 90, sets: [{w:40.5,r:12,done:false},{w:40.5,r:12,done:false},{w:40.5,r:12,done:false}] }
+  ]},
+  '2026-09-17': { exercises: [
     { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:40,done:false}] }
   ]},
-  '2026-09-10': { exercises: [
-    { name: '백스쿼트', rest: 180, sets: [{w:20,r:10,done:false},{w:40,r:5,done:false},{w:60,r:5,done:false},{w:80,r:3,done:false},{w:95,r:5,done:false},{w:102,r:3,done:false},{w:85,r:6,done:false},{w:85,r:6,done:false},{w:85,r:6,done:false}] },
-    { name: '루마니안 데드리프트', rest: 120, sets: [{w:70,r:8,done:false},{w:70,r:8,done:false},{w:70,r:8,done:false}] },
-    { name: '레그프레스', rest: 120, sets: [{w:120,r:10,done:false},{w:120,r:10,done:false}] },
+  '2026-09-18': { exercises: [
+    { name: '백스쿼트', rest: 180, sets: [{w:20,r:10,done:false},{w:60,r:5,done:false},{w:83.5,r:3,done:false},{w:95,r:3,done:false},{w:105,r:3,done:false},{w:87.5,r:6,done:false},{w:87.5,r:6,done:false},{w:87.5,r:6,done:false}] },
+    { name: '루마니안 데드리프트', rest: 150, sets: [{w:88,r:5,done:false},{w:88,r:5,done:false},{w:88,r:5,done:false}] },
     { name: '레그컬', rest: 90, sets: [{w:40.5,r:12,done:false},{w:40.5,r:12,done:false},{w:40.5,r:12,done:false}] },
-    { name: '존2 러닝 마무리 (횟수=분)', rest: 60, sets: [{w:0,r:15,done:false}] }
+    { name: '레그프레스', rest: 120, sets: [{w:130,r:10,done:false},{w:130,r:10,done:false}] }
+  ]},
+  '2026-09-20': { exercises: [
+    { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:50,done:false}] }
+  ]},
+  '2026-09-12': { exercises: [
+    { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:40,done:false}] }
   ]},
   '2026-09-07': { exercises: [
     { name: '레그프레스', rest: 120, sets: [{w:80,r:10,done:true},{w:80,r:10,done:true},{w:80,r:10,done:true}] },
