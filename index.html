@@ -333,7 +333,7 @@
 'use strict';
 const KEY = 'workout-tracker-v1';
 const SKIP_KEY = 'workout-tracker-skip';  /* 사용자가 비운 날짜 — SEED가 되살리지 않는다 */
-const BUILD = '2026-09-11.2';  /* 배포할 때마다 올린다 — 캐시 감지용 */
+const BUILD = '2026-09-14.1';  /* 배포할 때마다 올린다 — 캐시 감지용 */
 const PRESET_GROUPS = [
   ['🦵 하체', ['백스쿼트','고블릿 스쿼트','레그프레스','레그컬','레그익스텐션','루마니안 데드리프트','데드리프트','런지','덤벨런지','힙쓰러스트','힙 어브덕션','카프레이즈']],
   ['🫁 가슴', ['벤치프레스','인클라인 벤치프레스','팩덱 플라이','케이블 크로스오버','딥스']],
@@ -469,13 +469,13 @@ const SEED = {
     { name: '시티드 로우', rest: 90, sets: [{w:45,r:10,done:true},{w:45,r:10,done:true},{w:45,r:10,done:true}] },
     { name: '숄더프레스', rest: 90, sets: [{w:36,r:10,done:true},{w:36,r:10,done:true},{w:36,r:10,done:true}] }
   ]},
-  '2026-09-09': { exercises: [
-    { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:30,done:false}] }
-  ]},
   '2026-09-11': { exercises: [
     { name: '백스쿼트', rest: 180, sets: [{w:20,r:10,done:true},{w:60,r:5,done:true},{w:60,r:5,done:true},{w:83.5,r:3,done:true},{w:92.5,r:5,done:true},{w:102,r:5,done:true},{w:83,r:6,done:true},{w:83,r:6,done:true},{w:83,r:6,done:true}] },
     { name: '루마니안 데드리프트', rest: 150, sets: [{w:83.5,r:5,done:true},{w:83.5,r:5,done:true},{w:83.5,r:5,done:true}] },
     { name: '레그프레스', rest: 120, sets: [{w:120,r:10,done:true},{w:120,r:10,done:true}] }
+  ]},
+  '2026-09-14': { exercises: [
+    { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:40,done:true}] }
   ]},
   '2026-09-15': { exercises: [
     { name: '벤치프레스', rest: 180, sets: [{w:20,r:10,done:false},{w:50,r:5,done:false},{w:60,r:5,done:false},{w:66,r:3,done:false},{w:56,r:8,done:false},{w:56,r:8,done:false},{w:56,r:8,done:false}] },
@@ -496,9 +496,6 @@ const SEED = {
   ]},
   '2026-09-20': { exercises: [
     { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:40,done:false}] }
-  ]},
-  '2026-09-12': { exercises: [
-    { name: '존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:25,done:false}] }
   ]},
   '2026-09-07': { exercises: [
     { name: '레그프레스', rest: 120, sets: [{w:80,r:10,done:true},{w:80,r:10,done:true},{w:80,r:10,done:true}] },
