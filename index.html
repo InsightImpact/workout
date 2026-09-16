@@ -334,7 +334,7 @@
 'use strict';
 const KEY = 'workout-tracker-v1';
 const SKIP_KEY = 'workout-tracker-skip';  /* 사용자가 비운 날짜 — SEED가 되살리지 않는다 */
-const BUILD = '2026-09-16.6';  /* 배포할 때마다 올린다 — 캐시 감지용 */
+const BUILD = '2026-09-16.7';  /* 배포할 때마다 올린다 — 캐시 감지용 */
 const PRESET_GROUPS = [
   ['🦵 하체', ['백스쿼트','고블릿 스쿼트','레그프레스','레그컬','레그익스텐션','루마니안 데드리프트','데드리프트','런지','덤벨런지','힙쓰러스트','힙 어브덕션','카프레이즈']],
   ['🫁 가슴', ['벤치프레스','인클라인 벤치프레스','팩덱 플라이','케이블 크로스오버','딥스']],
@@ -493,9 +493,9 @@ const SEED = {
     { name: '벽 푸시업 플러스 (전거근)', rest: 45, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false},{w:0,r:15,done:false}] }
   ]},
   '2026-09-18': { exercises: [
-    { name: '시티드 로우', rest: 90, sets: [{w:47.5,r:10,done:false},{w:47.5,r:10,done:false},{w:47.5,r:10,done:false}] },
     { name: '덤벨 플로어 프레스 (뉴트럴 그립)', rest: 150, sets: [{w:10,r:10,done:false},{w:14,r:10,done:false},{w:14,r:10,done:false},{w:14,r:10,done:false}] },
-    { name: '원암 덤벨로우 — 왼쪽만', rest: 90, sets: [{w:16,r:12,done:false},{w:16,r:12,done:false},{w:16,r:12,done:false}] },
+    { name: '원암 덤벨로우 — 왼쪽', rest: 90, sets: [{w:16,r:12,done:false},{w:16,r:12,done:false},{w:16,r:12,done:false}] },
+    { name: '원암 덤벨로우 — 오른쪽 (유지 1세트)', rest: 90, sets: [{w:16,r:12,done:false}] },
     { name: '밴드 풀어파트 (견갑)', rest: 45, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false},{w:0,r:15,done:false}] },
     { name: '레터럴레이즈 (재활)', rest: 60, sets: [{w:3,r:15,done:false},{w:3,r:15,done:false},{w:3,r:15,done:false}] },
     { name: '레터럴레이즈 — 왼팔 추가', rest: 60, sets: [{w:3,r:15,done:false},{w:3,r:15,done:false}] },
