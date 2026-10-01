@@ -108,6 +108,13 @@
   .del-set { color: var(--red); }
   .set-actions button:disabled { opacity: .35; }
 
+  .meal-box { margin-top: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 12px 14px; box-shadow: 0 1px 3px rgba(20,30,60,.05); }
+  .meal-box label { display: block; font-size: 14px; font-weight: 700; margin-bottom: 7px; }
+  .meal-box label .hint { font-size: 11px; font-weight: 400; color: var(--sub); margin-left: 4px; }
+  #meal-input { width: 100%; box-sizing: border-box; min-height: 66px; border: 1px solid var(--border); border-radius: 10px; padding: 9px 10px; font: inherit; font-size: 14px; line-height: 1.45; resize: vertical; background: #fafbfd; color: inherit; }
+  #meal-input:focus { outline: none; border-color: var(--accent2); background: #fff; }
+  .meal-saved { font-size: 11px; color: var(--sub); margin-top: 5px; min-height: 14px; }
+  .day .meal-mark { position: absolute; top: 3px; right: 4px; width: 5px; height: 5px; border-radius: 50%; background: #f0a030; }
   .finish-btn {
     width: 100%; margin-top: 14px; padding: 17px; font-size: 16px; font-weight: 700;
     background: var(--green); color: #fff; box-shadow: 0 2px 8px rgba(31,174,102,.28);
@@ -235,6 +242,11 @@
   <button onclick="applyTemplate('zone2')">🏃 존2 러닝<span class="sub">30분</span></button>
 </div>
 <button class="add-ex" onclick="openExModal()">＋ 운동 추가</button>
+<div class="meal-box">
+  <label for="meal-input">🍽 이 날 먹은 것 <span class="hint">기록 복사에 자동 포함</span></label>
+  <textarea id="meal-input" placeholder="예: 아침 계란3 / 점심 회사식 제육 / 저녁 샐러디 닭다리살(드레싱 절반) / 간식 사워도우 2"></textarea>
+  <div class="meal-saved" id="meal-saved"></div>
+</div>
 <button class="finish-btn" id="finish-btn" onclick="finishWorkout()">✅ 오늘 운동 완료</button>
 
 <div id="timerbar">
@@ -334,7 +346,7 @@
 'use strict';
 const KEY = 'workout-tracker-v1';
 const SKIP_KEY = 'workout-tracker-skip';  /* 사용자가 비운 날짜 — SEED가 되살리지 않는다 */
-const BUILD = '2026-10-01.4';  /* 배포할 때마다 올린다 — 캐시 감지용 */
+const BUILD = '2026-10-01.6';  /* 배포할 때마다 올린다 — 캐시 감지용 */
 const PRESET_GROUPS = [
   ['🦵 하체', ['백스쿼트','고블릿 스쿼트','레그프레스','레그컬','레그익스텐션','루마니안 데드리프트','데드리프트','런지','덤벨런지','힙쓰러스트','힙 어브덕션','카프레이즈']],
   ['🫁 가슴', ['벤치프레스','인클라인 벤치프레스','팩덱 플라이','케이블 크로스오버','딥스']],
@@ -546,13 +558,14 @@ const SEED = {
     { name: '밴드 풀어파트 (견갑)', rest: 45, sets: [{w:0,r:15,done:true},{w:0,r:15,done:true},{w:0,r:15,done:true}] }
   ]},
   '2026-10-01': { exercises: [
-    { name: '밴드 풀어파트 (워밍업)', rest: 30, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] },
-    { name: '레그프레스 (무게 동결)', rest: 150, sets: [{w:120,r:10,done:false},{w:140,r:8,done:false},{w:150,r:8,done:false},{w:150,r:8,done:false},{w:150,r:8,done:false}] },
-    { name: '스플릿 스쿼트 (덤벨)', rest: 120, sets: [{w:16,r:10,done:false},{w:16,r:10,done:false},{w:16,r:10,done:false}] },
-    { name: '45도 백익스텐션', rest: 90, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false},{w:0,r:15,done:false}] },
-    { name: '레그컬', rest: 90, sets: [{w:40.5,r:12,done:false},{w:40.5,r:12,done:false},{w:40.5,r:12,done:false}] },
-    { name: '레그익스텐션', rest: 90, sets: [{w:45.5,r:12,done:false},{w:45.5,r:12,done:false},{w:45.5,r:12,done:false}] },
-    { name: '밴드 풀어파트 (견갑)', rest: 45, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false},{w:0,r:15,done:false}] }
+    { name: '밴드 풀어파트 (워밍업)', rest: 30, sets: [{w:0,r:15,done:true},{w:0,r:15,done:true}] },
+    { name: '레그프레스', rest: 150, sets: [{w:120,r:10,done:true},{w:145,r:8,done:true},{w:154,r:8,done:true},{w:154,r:8,done:true},{w:154,r:8,done:true}] },
+    { name: '스플릿 스쿼트 (덤벨)', rest: 120, sets: [{w:16,r:10,done:true},{w:16,r:10,done:true},{w:16,r:10,done:true},{w:22,r:10,done:true}] },
+    { name: '45도 백익스텐션', rest: 90, sets: [{w:0,r:15,done:true},{w:0,r:15,done:true},{w:0,r:15,done:true}] },
+    { name: '레그컬', rest: 90, sets: [{w:40.5,r:12,done:true},{w:40.5,r:12,done:true},{w:40.5,r:12,done:true}] },
+    { name: '레그익스텐션', rest: 90, sets: [{w:45.5,r:12,done:true},{w:45.5,r:12,done:true},{w:45.5,r:12,done:true}] },
+    { name: '밴드 풀어파트 (견갑)', rest: 45, sets: [{w:0,r:15,done:true},{w:0,r:15,done:true},{w:0,r:15,done:true}] },
+    { name: '존2 러닝 트레드밀 (횟수=분)', rest: 60, sets: [{w:0,r:20,done:true}] }
   ]},
   '2026-10-02': { exercises: [
     { name: '밴드 풀어파트 (워밍업)', rest: 30, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] },
@@ -605,11 +618,10 @@ function load() {
        완료 표시(✓)가 하나라도 있으면 실제 기록이므로 절대 건드리지 않는다. */
     const untouched = !empty && !cur.exercises.some(e => e.sets.some(s => s.done)) && !cur.startedAt;
     const seedDone = day.exercises.some(e => e.sets.some(s => s.done));
-    if (empty || (untouched && !seedDone)) {
+    const keepMeal = cur && cur.meal;   /* 식사 메모는 계획 갱신과 무관하게 보존 */
+    if (empty || untouched) {
       data[ds] = JSON.parse(JSON.stringify(day));
-      seeded = true;
-    } else if (untouched && seedDone) {
-      data[ds] = JSON.parse(JSON.stringify(day));
+      if (keepMeal) data[ds].meal = keepMeal;
       seeded = true;
     }
   });
@@ -655,6 +667,7 @@ function renderCalendar() {
       dot.className = 'dot';
       cell.appendChild(dot);
     }
+    if (day && day.meal) { cell.style.position = 'relative'; const mm = document.createElement('span'); mm.className = 'meal-mark'; cell.appendChild(mm); }
     cell.onclick = () => selectDate(ds);
     grid.appendChild(cell);
   }
@@ -692,6 +705,9 @@ function renderRoutine() {
     fbtn.textContent = finished ? '✅ 완료됨 — 다시 저장하기' : '✅ 오늘 운동 완료';
     fbtn.className = 'finish-btn' + (finished ? ' done' : '');
   }
+  const mi = document.getElementById('meal-input');
+  if (mi && document.activeElement !== mi) mi.value = (day && day.meal) || '';
+  const ms = document.getElementById('meal-saved'); if (ms) ms.textContent = '';
   if (!day || !day.exercises.length) {
     box.innerHTML = '<div class="empty">이 날의 루틴이 없습니다.<br>운동을 추가하거나 다른 날짜에서 복사해 오세요.</div>';
     return;
@@ -858,7 +874,9 @@ function doCopy() {
   if (!target) return;
   if (data[target] && data[target].exercises.length && !confirm(`${target}에 이미 루틴이 있습니다. 덮어쓸까요?`)) return;
   const src = data[selDate];
+  const keepMeal = data[target] && data[target].meal;
   data[target] = {
+    ...(keepMeal ? { meal: keepMeal } : {}),
     exercises: src.exercises.map(e => ({
       name: e.name, rest: e.rest,
       sets: e.sets.map(s => ({ w: s.w, r: s.r, done: false }))
@@ -876,7 +894,9 @@ function reloadPlan() {
   const hasDone = cur && cur.exercises && cur.exercises.some(e => e.sets.some(s => s.done));
   if (hasDone && !confirm('이미 체크한 세트가 있습니다. 계획으로 덮어쓸까요?')) return;
   unskip(selDate);
+  const keepMeal = cur && cur.meal;
   data[selDate] = JSON.parse(JSON.stringify(src));
+  if (keepMeal) data[selDate].meal = keepMeal;
   save(); renderRoutine();
   toast('계획을 불러왔습니다');
 }
@@ -885,7 +905,8 @@ function clearDay() {
   const day = data[selDate];
   if (!day || !day.exercises.length) return;
   if (confirm('이 날의 루틴을 모두 삭제할까요?')) {
-    delete data[selDate];
+    if (day.meal) data[selDate] = { exercises: [], meal: day.meal };   /* 식사 메모는 남긴다 */
+    else delete data[selDate];
     addSkip(selDate);
     save(); renderRoutine();
   }
@@ -1068,18 +1089,58 @@ function copySummary(quiet) {
   if (day && day.exercises.length) {
     scope = selDate + ' 기록';
     txt = summaryText({ [selDate]: day });
+  } else if (day && day.meal) {
+    scope = selDate + ' 식사';
+    txt = selDate + ': 운동 없음';
   } else {
     const hist = recentHistory(4);
     if (!Object.keys(hist).length) { alert('복사할 기록이 없습니다.'); return; }
     scope = '최근 4주 기록';
     txt = summaryText(hist);
   }
-  const full = `[운동 기록 — ${scope}] (✓=완료, ✗=미완료)\n${txt}`;
+  const full = `[운동 기록 — ${scope}] (✓=완료, ✗=미완료)\n${txt}` + mealLines(selDate);
   const done = () => { if (!quiet) toast('📋 복사됨 — Claude 대화에 붙여넣으세요'); };
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(full).then(done, () => fallbackCopy(full, done));
   } else fallbackCopy(full, done);
 }
+/* 최근 3일(그 날 포함) 식사 메모 — 아침 운동이면 어제 저녁까지 같이 넘어간다 */
+function mealLines(baseDs) {
+  const [y, m, d] = baseDs.split('-').map(Number);
+  const out = [];
+  for (let k = 2; k >= 0; k--) {
+    const dt = new Date(y, m - 1, d - k);
+    const ds = fmt(dt.getFullYear(), dt.getMonth(), dt.getDate());
+    const day = data[ds];
+    if (day && day.meal && day.meal.trim()) {
+      const tag = k === 0 ? ' (당일)' : k === 1 ? ' (전날)' : '';
+      out.push(`${ds}${tag}: ${day.meal.trim().replace(/\s*\n+\s*/g, ' / ')}`);
+    }
+  }
+  return out.length ? '\n[식사]\n' + out.join('\n') : '';
+}
+let mealTimer = null, mealDs = null;
+function saveMeal(ds, v) {
+  if (!data[ds]) data[ds] = { exercises: [] };
+  if (v.trim()) data[ds].meal = v; else delete data[ds].meal;
+  if (!data[ds].exercises.length && !data[ds].meal && !data[ds].startedAt) delete data[ds];
+  save();
+  const ms = document.getElementById('meal-saved');
+  if (ms && ds === selDate) ms.textContent = v.trim() ? '저장됨 ✓' : '';
+}
+(function initMeal() {
+  const mi = document.getElementById('meal-input');
+  if (!mi) return;
+  mi.addEventListener('input', () => {
+    mealDs = selDate;
+    const v = mi.value;
+    clearTimeout(mealTimer);
+    mealTimer = setTimeout(() => saveMeal(mealDs, v), 400);
+  });
+  mi.addEventListener('blur', () => {
+    if (mealTimer) { clearTimeout(mealTimer); mealTimer = null; saveMeal(mealDs || selDate, mi.value); }
+  });
+})();
 function fallbackCopy(txt, done) {
   const ta = document.createElement('textarea');
   ta.value = txt;
