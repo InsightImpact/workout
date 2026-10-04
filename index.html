@@ -346,7 +346,7 @@
 'use strict';
 const KEY = 'workout-tracker-v1';
 const SKIP_KEY = 'workout-tracker-skip';  /* 사용자가 비운 날짜 — SEED가 되살리지 않는다 */
-const BUILD = '2026-10-04.1';  /* 배포할 때마다 올린다 — 캐시 감지용 */
+const BUILD = '2026-10-04.2';  /* 배포할 때마다 올린다 — 캐시 감지용 */
 const PRESET_GROUPS = [
   ['🦵 하체', ['백스쿼트','고블릿 스쿼트','레그프레스','레그컬','레그익스텐션','루마니안 데드리프트','데드리프트','런지','덤벨런지','힙쓰러스트','힙 어브덕션','카프레이즈']],
   ['🫁 가슴', ['벤치프레스','인클라인 벤치프레스','팩덱 플라이','케이블 크로스오버','딥스']],
@@ -583,16 +583,44 @@ const SEED = {
     { name: '벽 푸시업 플러스 (전거근)', rest: 45, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false},{w:0,r:15,done:false}] }
   ]},
   '2026-10-05': { exercises: [
-    { name: '워밍업 — 제자리 걷기·팔돌리기·맨몸 스쿼트 (횟수=분)', rest: 30, sets: [{w:0,r:5,done:false}] },
-    { name: '불가리안 스플릿 스쿼트 (덤벨 9kg×2, 3초 내리기)', rest: 90, sets: [{w:18,r:12,done:false},{w:18,r:12,done:false},{w:18,r:12,done:false}] },
+    { name: '워밍업 — 제자리 걷기·팔돌리기 (횟수=분)', rest: 30, sets: [{w:0,r:5,done:false}] },
     { name: '푸시업 (2회 남기고 멈춤 · 왼어깨 찌릿하면 소파 짚고)', rest: 90, sets: [{w:0,r:12,done:false},{w:0,r:12,done:false},{w:0,r:12,done:false}] },
-    { name: '원암 덤벨로우 9kg (1초 멈춤) — 왼쪽', rest: 60, sets: [{w:9,r:15,done:false},{w:9,r:15,done:false},{w:9,r:15,done:false},{w:9,r:15,done:false}] },
-    { name: '원암 덤벨로우 9kg — 오른쪽', rest: 60, sets: [{w:9,r:15,done:false},{w:9,r:15,done:false},{w:9,r:15,done:false}] },
+    { name: '원암 덤벨로우 9kg (1초 멈춤) — 양쪽 각각', rest: 60, sets: [{w:9,r:15,done:false},{w:9,r:15,done:false},{w:9,r:15,done:false}] },
     { name: '싱글레그 글루트 브릿지 (2초 멈춤)', rest: 60, sets: [{w:0,r:12,done:false},{w:0,r:12,done:false},{w:0,r:12,done:false}] },
-    { name: '밴드 풀어파트 (견갑)', rest: 45, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] },
-    { name: '벽 푸시업 플러스 (전거근)', rest: 45, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] },
     { name: '데드버그 (좌우 합)', rest: 45, sets: [{w:0,r:10,done:false},{w:0,r:10,done:false},{w:0,r:10,done:false}] },
-    { name: '(선택) 빠르게 걷기 또는 존2 러닝 (횟수=분)', rest: 60, sets: [{w:0,r:30,done:false}] }
+    { name: '밴드 풀어파트 (견갑)', rest: 45, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] },
+    { name: '빠르게 걷기 (횟수=분) — 하체는 화요일을 위해 쉼', rest: 60, sets: [{w:0,r:30,done:false}] }
+  ]},
+  '2026-10-06': { exercises: [
+    { name: '밴드 풀어파트 (워밍업)', rest: 30, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] },
+    { name: '벽 푸시업 플러스 (워밍업)', rest: 30, sets: [{w:0,r:15,done:false}] },
+    { name: '핵스쿼트 [신규·주종목] 무게=원판 합계 · 첫날 RPE7에서 기록', rest: 150, sets: [{w:0,r:10,done:false},{w:20,r:8,done:false},{w:40,r:6,done:false},{w:40,r:6,done:false},{w:40,r:6,done:false},{w:40,r:6,done:false}] },
+    { name: '↳ 핵스쿼트 없으면 레그프레스 165×6×3', rest: 60, sets: [{w:0,r:1,done:false}] },
+    { name: '바벨 힙쓰러스트 [신규]', rest: 120, sets: [{w:40,r:10,done:false},{w:70,r:8,done:false},{w:70,r:8,done:false},{w:70,r:8,done:false}] },
+    { name: '인클라인 벤치프레스', rest: 150, sets: [{w:20,r:10,done:false},{w:30,r:8,done:false},{w:40,r:3,done:false},{w:46,r:7,done:false},{w:46,r:7,done:false},{w:46,r:7,done:false}] },
+    { name: '원암 덤벨로우 — 양쪽 각각 (무게↑ 횟수↓)', rest: 90, sets: [{w:20,r:8,done:false},{w:20,r:8,done:false},{w:20,r:8,done:false}] },
+    { name: '레그컬', rest: 90, sets: [{w:45,r:10,done:false},{w:45,r:10,done:false},{w:45,r:10,done:false}] },
+    { name: '레터럴레이즈 (유지)', rest: 60, sets: [{w:6,r:15,done:false},{w:6,r:15,done:false}] },
+    { name: '레터럴레이즈 — 왼팔 1세트', rest: 60, sets: [{w:4.5,r:15,done:false}] }
+  ]},
+  '2026-10-07': { exercises: [
+    { name: '존2 러닝 45분 — 첫 2km 9분대 · 5km 이후 138 넘으면 10~15초 늦추기 (횟수=분)', rest: 60, sets: [{w:0,r:45,done:false}] },
+    { name: '↑ 케이던스 155 유지', rest: 60, sets: [{w:0,r:1,done:false}] }
+  ]},
+  '2026-10-09': { exercises: [
+    { name: '밴드 풀어파트 (워밍업)', rest: 30, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] },
+    { name: '벽 푸시업 플러스 (워밍업)', rest: 30, sets: [{w:0,r:15,done:false}] },
+    { name: '레그프레스 [주종목] (무게↑ 횟수↓)', rest: 150, sets: [{w:120,r:8,done:false},{w:145,r:5,done:false},{w:165,r:6,done:false},{w:165,r:6,done:false},{w:165,r:6,done:false}] },
+    { name: '플랫 벤치프레스 [복귀] 기존 64의 85%', rest: 150, sets: [{w:20,r:10,done:false},{w:40,r:5,done:false},{w:55,r:5,done:false},{w:55,r:5,done:false},{w:55,r:5,done:false}] },
+    { name: '스플릿 스쿼트 (덤벨) — 10/1과 같은 기준', rest: 120, sets: [{w:20,r:8,done:false},{w:20,r:8,done:false},{w:20,r:8,done:false}] },
+    { name: '시티드 케이블로우', rest: 90, sets: [{w:52,r:8,done:false},{w:52,r:8,done:false},{w:52,r:8,done:false}] },
+    { name: '45도 백익스텐션 (원판 안고)', rest: 90, sets: [{w:10,r:12,done:false},{w:10,r:12,done:false},{w:10,r:12,done:false}] },
+    { name: '레터럴레이즈 (유지)', rest: 60, sets: [{w:6,r:15,done:false},{w:6,r:15,done:false}] },
+    { name: '밴드 풀어파트 (마무리)', rest: 45, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] }
+  ]},
+  '2026-10-10': { exercises: [
+    { name: '존2 러닝 50~60분 (횟수=분)', rest: 60, sets: [{w:0,r:60,done:false}] },
+    { name: '↑ 첫 2km 9분대 · 141 넘으면 걷기 · 케이던스 155', rest: 60, sets: [{w:0,r:1,done:false}] }
   ]},
 };
 /* 저장소가 막힌 환경(파일 미리보기 등)에서도 앱이 죽지 않도록 감싼다 */
