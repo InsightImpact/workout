@@ -346,7 +346,7 @@
 'use strict';
 const KEY = 'workout-tracker-v1';
 const SKIP_KEY = 'workout-tracker-skip';  /* 사용자가 비운 날짜 — SEED가 되살리지 않는다 */
-const BUILD = '2026-10-05.1';  /* 배포할 때마다 올린다 — 캐시 감지용 */
+const BUILD = '2026-10-06.1';  /* 배포할 때마다 올린다 — 캐시 감지용 */
 const PRESET_GROUPS = [
   ['🦵 하체', ['백스쿼트','고블릿 스쿼트','레그프레스','레그컬','레그익스텐션','루마니안 데드리프트','데드리프트','런지','덤벨런지','힙쓰러스트','힙 어브덕션','카프레이즈']],
   ['🫁 가슴', ['벤치프레스','인클라인 벤치프레스','팩덱 플라이','케이블 크로스오버','딥스']],
@@ -592,30 +592,27 @@ const SEED = {
     { name: '빠르게 걷기 (횟수=분) — 하체는 화요일을 위해 쉼', rest: 60, sets: [{w:0,r:30,done:false}] }
   ]},
   '2026-10-06': { exercises: [
+    { name: '⚠ 이석증 — 서서·고개 세운 채로만. 눕기·고개 숙이기 없음', rest: 30, sets: [{w:0,r:1,done:false}] },
     { name: '밴드 풀어파트 (워밍업)', rest: 30, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] },
-    { name: '벽 푸시업 플러스 (워밍업)', rest: 30, sets: [{w:0,r:15,done:false}] },
-    { name: '⚠ 이석증 주간 — 눕기·고개 숙이기·빠른 고개 돌리기 피함. 자세 바꿀 땐 천천히', rest: 30, sets: [{w:0,r:1,done:false}] },
-    { name: '핵스쿼트 [신규·주종목] 무게=원판 합계 · 첫날 RPE7에서 기록 · 시선 정면', rest: 150, sets: [{w:0,r:10,done:false},{w:20,r:8,done:false},{w:40,r:6,done:false},{w:40,r:6,done:false},{w:40,r:6,done:false},{w:40,r:6,done:false}] },
-    { name: '↳ 핵스쿼트 없으면 레그프레스 165×6×3', rest: 60, sets: [{w:0,r:1,done:false}] },
-    { name: '머신 체스트프레스 (인클라인 대신 · 앉아서) RPE8', rest: 120, sets: [{w:30,r:10,done:false},{w:50,r:8,done:false},{w:50,r:8,done:false},{w:50,r:8,done:false}] },
-    { name: '시티드 케이블로우 (원암로우 대신 · 상체 세움)', rest: 90, sets: [{w:52,r:8,done:false},{w:52,r:8,done:false},{w:52,r:8,done:false}] },
-    { name: '케이블 풀스루 (힙쓰러스트 대신 · 서서 힙힌지)', rest: 90, sets: [{w:30,r:12,done:false},{w:30,r:12,done:false},{w:30,r:12,done:false}] },
-    { name: '시티드 레그컬 (엎드리는 레그컬 대신)', rest: 90, sets: [{w:45,r:10,done:false},{w:45,r:10,done:false},{w:45,r:10,done:false}] },
-    { name: '레터럴레이즈 (유지)', rest: 60, sets: [{w:6,r:15,done:false},{w:6,r:15,done:false}] },
-    { name: '레터럴레이즈 — 왼팔 1세트', rest: 60, sets: [{w:4.5,r:15,done:false}] }
+    { name: '불가리안 스플릿 스쿼트 (덤벨 9kg×2, 3초 내리기) — 다리별', rest: 90, sets: [{w:18,r:10,done:false},{w:18,r:10,done:false},{w:18,r:10,done:false}] },
+    { name: '인클라인 푸시업 (식탁·소파 짚고 · 2회 남기고)', rest: 90, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false},{w:0,r:15,done:false}] },
+    { name: '원암 덤벨로우 9kg (높은 테이블 짚고 상체 45°) — 양쪽 각각', rest: 60, sets: [{w:9,r:15,done:false},{w:9,r:15,done:false},{w:9,r:15,done:false}] },
+    { name: '밴드 팔로프 프레스 (서서 버티기 · 코어) — 좌우 각각', rest: 45, sets: [{w:0,r:12,done:false},{w:0,r:12,done:false},{w:0,r:12,done:false}] },
+    { name: '스탠딩 카프레이즈 (덤벨 9kg×2)', rest: 45, sets: [{w:18,r:15,done:false},{w:18,r:15,done:false}] },
+    { name: '밴드 풀어파트 — 왼팔 단독', rest: 45, sets: [{w:0,r:15,done:false}] },
+    { name: '존2 러닝 30~35분 — 평지 · 고개 고정 · 어지러우면 바로 걷기 (횟수=분)', rest: 60, sets: [{w:0,r:35,done:false}] }
   ]},
   '2026-10-07': { exercises: [
-    { name: '실내 자전거 존2 45분 (러닝 대신 · 머리 흔들림 최소) (횟수=분)', rest: 60, sets: [{w:0,r:45,done:false}] },
-    { name: '↑ 심박 130~141 · 자전거는 러닝보다 심박이 5~10 낮게 나오니 페달 강도 올려 맞추기', rest: 60, sets: [{w:0,r:1,done:false}] }
+    { name: '휴식 또는 빠르게 걷기 30분 (어제 러닝 · 이석증 회복) (횟수=분)', rest: 60, sets: [{w:0,r:30,done:false}] }
   ]},
   '2026-10-09': { exercises: [
     { name: '밴드 풀어파트 (워밍업)', rest: 30, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] },
     { name: '벽 푸시업 플러스 (워밍업)', rest: 30, sets: [{w:0,r:15,done:false}] },
-    { name: '레그프레스 [주종목] (무게↑ 횟수↓)', rest: 150, sets: [{w:120,r:8,done:false},{w:145,r:5,done:false},{w:165,r:6,done:false},{w:165,r:6,done:false},{w:165,r:6,done:false}] },
-    { name: '플랫 벤치프레스 [복귀] 55 · 어지럼 남아 있으면 머신 체스트프레스로', rest: 150, sets: [{w:20,r:10,done:false},{w:40,r:5,done:false},{w:55,r:5,done:false},{w:55,r:5,done:false},{w:55,r:5,done:false}] },
-    { name: '스플릿 스쿼트 (덤벨) — 10/1과 같은 기준', rest: 120, sets: [{w:20,r:8,done:false},{w:20,r:8,done:false},{w:20,r:8,done:false}] },
-    { name: '원암 덤벨로우 양쪽 각각 (어지럼 있으면 머신로우)', rest: 90, sets: [{w:20,r:8,done:false},{w:20,r:8,done:false},{w:20,r:8,done:false}] },
-    { name: '45도 백익스텐션 (원판 안고) · 어지럼 있으면 케이블 풀스루', rest: 90, sets: [{w:10,r:12,done:false},{w:10,r:12,done:false},{w:10,r:12,done:false}] },
+    { name: '핵스쿼트 [신규·주종목] 무게=원판 합계 · RPE7에서 기록 · 시선 정면', rest: 150, sets: [{w:0,r:10,done:false},{w:20,r:8,done:false},{w:40,r:6,done:false},{w:40,r:6,done:false},{w:40,r:6,done:false},{w:40,r:6,done:false}] },
+    { name: '레그프레스 (백오프) · 핵스쿼트 없으면 165×6×3', rest: 120, sets: [{w:150,r:8,done:false},{w:150,r:8,done:false}] },
+    { name: '플랫 벤치프레스 [복귀] 55 · 어지럼 남아 있으면 머신 체스트프레스', rest: 150, sets: [{w:20,r:10,done:false},{w:40,r:5,done:false},{w:55,r:5,done:false},{w:55,r:5,done:false},{w:55,r:5,done:false}] },
+    { name: '원암 덤벨로우 양쪽 각각 (어지럼 있으면 시티드 케이블로우 52×8)', rest: 90, sets: [{w:20,r:8,done:false},{w:20,r:8,done:false},{w:20,r:8,done:false}] },
+    { name: '시티드 레그컬', rest: 90, sets: [{w:45,r:10,done:false},{w:45,r:10,done:false},{w:45,r:10,done:false}] },
     { name: '레터럴레이즈 (유지)', rest: 60, sets: [{w:6,r:15,done:false},{w:6,r:15,done:false}] },
     { name: '밴드 풀어파트 (마무리)', rest: 45, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] }
   ]},
