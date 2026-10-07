@@ -346,7 +346,7 @@
 'use strict';
 const KEY = 'workout-tracker-v1';
 const SKIP_KEY = 'workout-tracker-skip';  /* 사용자가 비운 날짜 — SEED가 되살리지 않는다 */
-const BUILD = '2026-10-06.1';  /* 배포할 때마다 올린다 — 캐시 감지용 */
+const BUILD = '2026-10-07.2';  /* 배포할 때마다 올린다 — 캐시 감지용 */
 const PRESET_GROUPS = [
   ['🦵 하체', ['백스쿼트','고블릿 스쿼트','레그프레스','레그컬','레그익스텐션','루마니안 데드리프트','데드리프트','런지','덤벨런지','힙쓰러스트','힙 어브덕션','카프레이즈']],
   ['🫁 가슴', ['벤치프레스','인클라인 벤치프레스','팩덱 플라이','케이블 크로스오버','딥스']],
@@ -605,7 +605,7 @@ const SEED = {
   '2026-10-07': { exercises: [
     { name: '휴식 또는 빠르게 걷기 30분 (어제 러닝 · 이석증 회복) (횟수=분)', rest: 60, sets: [{w:0,r:30,done:false}] }
   ]},
-  '2026-10-09': { exercises: [
+  '2026-10-08': { exercises: [
     { name: '밴드 풀어파트 (워밍업)', rest: 30, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] },
     { name: '벽 푸시업 플러스 (워밍업)', rest: 30, sets: [{w:0,r:15,done:false}] },
     { name: '핵스쿼트 [신규·주종목] 무게=원판 합계 · RPE7에서 기록 · 시선 정면', rest: 150, sets: [{w:0,r:10,done:false},{w:20,r:8,done:false},{w:40,r:6,done:false},{w:40,r:6,done:false},{w:40,r:6,done:false},{w:40,r:6,done:false}] },
@@ -616,9 +616,17 @@ const SEED = {
     { name: '레터럴레이즈 (유지)', rest: 60, sets: [{w:6,r:15,done:false},{w:6,r:15,done:false}] },
     { name: '밴드 풀어파트 (마무리)', rest: 45, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] }
   ]},
+  '2026-10-09': { exercises: [
+    { name: '존2 러닝 40~45분 — 첫 km 9분대 · 141 넘으면 걷기 · 케이던스 155 (횟수=분)', rest: 60, sets: [{w:0,r:45,done:false}] },
+    { name: '밴드 풀어파트 + 벽 푸시업 플러스 (각 15회)', rest: 45, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] }
+  ]},
   '2026-10-10': { exercises: [
-    { name: '존2 러닝 50~60분 — 이석증 증상 2~3일 없을 때만. 아니면 실내 자전거 (횟수=분)', rest: 60, sets: [{w:0,r:60,done:false}] },
-    { name: '↑ 첫 2km 9분대 · 141 넘으면 걷기 · 케이던스 155', rest: 60, sets: [{w:0,r:1,done:false}] }
+    { name: '홈트 — 인클라인 푸시업 (2회 남기고)', rest: 90, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false},{w:0,r:15,done:false}] },
+    { name: '원암 덤벨로우 9kg (1초 멈춤) — 양쪽 각각', rest: 60, sets: [{w:9,r:15,done:false},{w:9,r:15,done:false},{w:9,r:15,done:false}] },
+    { name: '불가리안 스플릿 스쿼트 9kg×2 (4초 내리기 · 아래 1초 멈춤) — 다리별', rest: 90, sets: [{w:18,r:10,done:false},{w:18,r:10,done:false},{w:18,r:10,done:false}] },
+    { name: '밴드 팔로프 프레스 — 좌우 각각', rest: 45, sets: [{w:0,r:12,done:false},{w:0,r:12,done:false},{w:0,r:12,done:false}] },
+    { name: '밴드 풀어파트 — 왼팔 단독', rest: 45, sets: [{w:0,r:15,done:false}] },
+    { name: '빠르게 걷기 (횟수=분)', rest: 60, sets: [{w:0,r:30,done:false}] }
   ]},
 };
 /* 저장소가 막힌 환경(파일 미리보기 등)에서도 앱이 죽지 않도록 감싼다 */
