@@ -346,7 +346,7 @@
 'use strict';
 const KEY = 'workout-tracker-v1';
 const SKIP_KEY = 'workout-tracker-skip';  /* 사용자가 비운 날짜 — SEED가 되살리지 않는다 */
-const BUILD = '2026-10-08.1';  /* 배포할 때마다 올린다 — 캐시 감지용 */
+const BUILD = '2026-10-12.1';  /* 배포할 때마다 올린다 — 캐시 감지용 */
 const PRESET_GROUPS = [
   ['🦵 하체', ['백스쿼트','고블릿 스쿼트','레그프레스','레그컬','레그익스텐션','루마니안 데드리프트','데드리프트','런지','덤벨런지','힙쓰러스트','힙 어브덕션','카프레이즈']],
   ['🫁 가슴', ['벤치프레스','인클라인 벤치프레스','팩덱 플라이','케이블 크로스오버','딥스']],
@@ -616,16 +616,26 @@ const SEED = {
     { name: '리버스 플라이 (델토이드 플라이 머신)', rest: 60, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] }
   ]},
   '2026-10-09': { exercises: [
-    { name: '존2 러닝 40~45분 — 첫 km 9분대 · 141 넘으면 걷기 · 케이던스 155 (횟수=분)', rest: 60, sets: [{w:0,r:45,done:false}] },
-    { name: '밴드 풀어파트 + 벽 푸시업 플러스 (각 15회)', rest: 45, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] }
+    { name: '[완료] 뒷산 산책로 걷기 (횟수=분)', rest: 60, sets: [{w:0,r:20,done:true}] },
+    { name: '[완료] 평지 산책 (횟수=분)', rest: 60, sets: [{w:0,r:40,done:true}] },
+    { name: '[완료] 자전거 (횟수=분)', rest: 60, sets: [{w:0,r:20,done:true}] }
   ]},
   '2026-10-10': { exercises: [
-    { name: '홈트 — 인클라인 푸시업 (2회 남기고)', rest: 90, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false},{w:0,r:15,done:false}] },
-    { name: '원암 덤벨로우 9kg (1초 멈춤) — 양쪽 각각', rest: 60, sets: [{w:9,r:15,done:false},{w:9,r:15,done:false},{w:9,r:15,done:false}] },
-    { name: '불가리안 스플릿 스쿼트 9kg×2 (4초 내리기 · 아래 1초 멈춤) — 다리별', rest: 90, sets: [{w:18,r:10,done:false},{w:18,r:10,done:false},{w:18,r:10,done:false}] },
-    { name: '밴드 팔로프 프레스 — 좌우 각각', rest: 45, sets: [{w:0,r:12,done:false},{w:0,r:12,done:false},{w:0,r:12,done:false}] },
-    { name: '밴드 풀어파트 — 왼팔 단독', rest: 45, sets: [{w:0,r:15,done:false}] },
-    { name: '빠르게 걷기 (횟수=분)', rest: 60, sets: [{w:0,r:30,done:false}] }
+    { name: '[완료] 등산 4.85km · 등반 295m · 평균 심박 111 · 414kcal (횟수=분)', rest: 60, sets: [{w:0,r:91,done:true}] },
+    { name: '[완료] 자전거 왕복 15.9km · 등반 306m · 430kcal (횟수=분)', rest: 60, sets: [{w:0,r:98,done:true}] }
+  ]},
+  '2026-10-11': { exercises: [
+    { name: '[완료] 자전거 판교→한강 25.5km · 18.5km/h · 심박 131 · 502kcal (횟수=분)', rest: 60, sets: [{w:0,r:82,done:true}] },
+    { name: '[완료] 자전거 한강→판교 24.8km · 15.7km/h · 심박 131 · 461kcal (횟수=분)', rest: 60, sets: [{w:0,r:95,done:true}] }
+  ]},
+  '2026-10-12': { exercises: [
+    { name: '인바디 먼저 — 공복 · 화장실 후 · 운동 전', rest: 30, sets: [{w:0,r:1,done:false}] },
+    { name: '밴드 풀어파트 (워밍업)', rest: 30, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] },
+    { name: 'A1 인클라인 벤치프레스 — 2회 여유 남기기 (A2와 슈퍼세트)', rest: 60, sets: [{w:20,r:10,done:false},{w:42.5,r:8,done:false},{w:42.5,r:8,done:false},{w:42.5,r:8,done:false}] },
+    { name: 'A2 원암 덤벨로우 — 왼쪽 (+1세트)', rest: 60, sets: [{w:16,r:10,done:false},{w:16,r:10,done:false},{w:16,r:10,done:false},{w:16,r:10,done:false}] },
+    { name: 'A2 원암 덤벨로우 — 오른쪽', rest: 60, sets: [{w:16,r:10,done:false},{w:16,r:10,done:false},{w:16,r:10,done:false}] },
+    { name: 'B1 레터럴레이즈 (B2와 슈퍼세트)', rest: 60, sets: [{w:6,r:15,done:false},{w:6,r:15,done:false}] },
+    { name: 'B2 밴드 풀어파트 (견갑)', rest: 45, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] }
   ]},
 };
 /* 저장소가 막힌 환경(파일 미리보기 등)에서도 앱이 죽지 않도록 감싼다 */
