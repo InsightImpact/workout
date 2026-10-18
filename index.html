@@ -346,7 +346,7 @@
 'use strict';
 const KEY = 'workout-tracker-v1';
 const SKIP_KEY = 'workout-tracker-skip';  /* 사용자가 비운 날짜 — SEED가 되살리지 않는다 */
-const BUILD = '2026-10-18.2';  /* 배포할 때마다 올린다 — 캐시 감지용 */
+const BUILD = '2026-10-18.3';  /* 배포할 때마다 올린다 — 캐시 감지용 */
 const PRESET_GROUPS = [
   ['🦵 하체', ['백스쿼트','고블릿 스쿼트','레그프레스','레그컬','레그익스텐션','루마니안 데드리프트','데드리프트','런지','덤벨런지','힙쓰러스트','힙 어브덕션','카프레이즈']],
   ['🫁 가슴', ['벤치프레스','인클라인 벤치프레스','팩덱 플라이','케이블 크로스오버','딥스']],
@@ -692,7 +692,8 @@ const SEED = {
     { name: '플랫 벤치프레스 — 안전바 세팅 · 6회 3세트 다 되면 다음엔 7회', rest: 180, sets: [{w:20,r:10,done:false},{w:42,r:5,done:false},{w:55,r:3,done:false},{w:65,r:6,done:false},{w:65,r:6,done:false},{w:65,r:6,done:false}] },
     { name: '시티드로우 머신 — 8회→10회', rest: 90, sets: [{w:54.5,r:10,done:false},{w:54.5,r:10,done:false},{w:54.5,r:10,done:false}] },
     { name: '레터럴레이즈', rest: 60, sets: [{w:6,r:15,done:false},{w:6,r:15,done:false}] },
-    { name: '리버스 플라이 (델토이드 플라이 머신)', rest: 60, sets: [{w:22.5,r:15,done:false},{w:22.5,r:15,done:false}] }
+    { name: '리버스 플라이 (델토이드 플라이 머신)', rest: 60, sets: [{w:22.5,r:15,done:false},{w:22.5,r:15,done:false}] },
+    { name: '트레드밀 경사 걷기 (주말 유산소 보충) — 경사 8~10% · 5.0~5.5km/h · 손잡이 X · 심박 120~135 (횟수=분)', rest: 60, sets: [{w:0,r:20,done:false}] }
   ]},
   '2026-10-20': { exercises: [
     { name: '존2 러닝 30~40분 — 전날 술 → 심박 평소보다 높음 · 141 넘으면 걷기 · 물 충분히 (횟수=분)', rest: 60, sets: [{w:0,r:35,done:false}] },
