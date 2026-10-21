@@ -346,7 +346,7 @@
 'use strict';
 const KEY = 'workout-tracker-v1';
 const SKIP_KEY = 'workout-tracker-skip';  /* 사용자가 비운 날짜 — SEED가 되살리지 않는다 */
-const BUILD = '2026-10-21.1';  /* 배포할 때마다 올린다 — 캐시 감지용 */
+const BUILD = '2026-10-22.1';  /* 배포할 때마다 올린다 — 캐시 감지용 */
 const PRESET_GROUPS = [
   ['🦵 하체', ['백스쿼트','고블릿 스쿼트','레그프레스','레그컬','레그익스텐션','루마니안 데드리프트','데드리프트','런지','덤벨런지','힙쓰러스트','힙 어브덕션','카프레이즈']],
   ['🫁 가슴', ['벤치프레스','인클라인 벤치프레스','팩덱 플라이','케이블 크로스오버','딥스']],
@@ -703,13 +703,9 @@ const SEED = {
     { name: '휴식 (B는 목요일로 이동) · 걷기 자유 (횟수=분)', rest: 60, sets: [{w:0,r:30,done:false}] }
   ]},
   '2026-10-23': { exercises: [
-    { name: '존2 유산소 40분 (오마카세 다음날) — 트레드밀 러닝 또는 경사 걷기 · 심박 130~141 (횟수=분)', rest: 60, sets: [{w:0,r:40,done:false}] },
-    { name: '밴드 풀어파트 + 벽 푸시업 플러스 (각 15회)', rest: 45, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] }
-  ]},
-  '2026-10-22': { exercises: [
     { name: '밴드 풀어파트 (워밍업)', rest: 30, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] },
+    { name: '레그프레스 — 누워서 · 6회→7회 [힙쓰러스트 대신]', rest: 150, sets: [{w:120,r:8,done:false},{w:145,r:5,done:false},{w:168,r:7,done:false},{w:168,r:7,done:false},{w:168,r:7,done:false}] },
     { name: '45도 백익스텐션 (원판 안고 · 허리 중립 · 엉덩이로) [RDL 대신]', rest: 90, sets: [{w:0,r:12,done:false},{w:10,r:12,done:false},{w:10,r:12,done:false},{w:10,r:12,done:false}] },
-    { name: '스미스 힙쓰러스트 [첫 시도] — 빈 바 10회로 자세 익히고 40 · 어색하면 덤벨 글루트 브릿지', rest: 90, sets: [{w:0,r:10,done:false},{w:40,r:10,done:false},{w:40,r:10,done:false},{w:40,r:10,done:false}] },
     { name: '글루트 킥백 머신 · 왼쪽 (+1세트)', rest: 60, sets: [{w:49.5,r:12,done:false},{w:49.5,r:12,done:false},{w:49.5,r:12,done:false},{w:49.5,r:12,done:false}] },
     { name: '글루트 킥백 머신 · 오른쪽', rest: 60, sets: [{w:49.5,r:12,done:false},{w:49.5,r:12,done:false},{w:49.5,r:12,done:false}] },
     { name: '원암 덤벨로우 — 왼쪽 (+1세트) · 10회→12회', rest: 60, sets: [{w:18,r:12,done:false},{w:18,r:12,done:false},{w:18,r:12,done:false},{w:18,r:12,done:false}] },
@@ -718,6 +714,9 @@ const SEED = {
     { name: '암컬 머신', rest: 60, sets: [{w:22.5,r:12,done:false},{w:22.5,r:12,done:false},{w:22.5,r:12,done:false}] },
     { name: '레터럴레이즈', rest: 60, sets: [{w:6,r:15,done:false},{w:6,r:15,done:false}] },
     { name: '트레드밀 경사 걷기 — 경사 8~10% · 5.0~5.5km/h · 손잡이 X (횟수=분)', rest: 60, sets: [{w:0,r:15,done:false}] }
+  ]},
+  '2026-10-22': { exercises: [
+    { name: '늦잠 → 운동 쉼 · 점심/퇴근길 걷기 15~20분 (횟수=분) · 저녁 오마카세', rest: 60, sets: [{w:0,r:20,done:false}] }
   ]},
   '2026-10-24': { exercises: [
     { name: '자유 유산소 — 낮에 자전거 또는 등산 60~90분 · 존2 위주 (횟수=분)', rest: 60, sets: [{w:0,r:75,done:false}] }
