@@ -346,7 +346,7 @@
 'use strict';
 const KEY = 'workout-tracker-v1';
 const SKIP_KEY = 'workout-tracker-skip';  /* 사용자가 비운 날짜 — SEED가 되살리지 않는다 */
-const BUILD = '2026-10-22.2';  /* 배포할 때마다 올린다 — 캐시 감지용 */
+const BUILD = '2026-10-23.1';  /* 배포할 때마다 올린다 — 캐시 감지용 */
 const PRESET_GROUPS = [
   ['🦵 하체', ['백스쿼트','고블릿 스쿼트','레그프레스','레그컬','레그익스텐션','루마니안 데드리프트','데드리프트','런지','덤벨런지','힙쓰러스트','힙 어브덕션','카프레이즈']],
   ['🫁 가슴', ['벤치프레스','인클라인 벤치프레스','팩덱 플라이','케이블 크로스오버','딥스']],
@@ -720,9 +720,52 @@ const SEED = {
     { name: 'B2 암컬 머신', rest: 45, sets: [{w:22.5,r:12,done:false},{w:22.5,r:12,done:false}] }
   ]},
   '2026-10-24': { exercises: [
-    { name: '자유 유산소 — 낮에 자전거 또는 등산 60~90분 · 존2 위주 (횟수=분)', rest: 60, sets: [{w:0,r:75,done:false}] }
+    { name: '외식 2회 (점심 바비큐 · 저녁 중국집) · 운동 없음 · 가능하면 걷기 (횟수=분)', rest: 60, sets: [{w:0,r:20,done:false}] }
   ]},
   '2026-10-25': { exercises: [
+    { name: '자전거 또는 등산 3~4시간 — 존2 위주 · 물·간식 챙기기 · 자전거면 1시간마다 허리 펴기 (횟수=분)', rest: 60, sets: [{w:0,r:210,done:false}] }
+  ]},
+  '2026-10-26': { exercises: [
+    { name: '월요일 아침 공복: 허리둘레(배꼽 높이) · 운동 후 씻기 전 체중', rest: 30, sets: [{w:0,r:1,done:false}] },
+    { name: '⚠ 어제 장거리 → 워밍업에서 다리 무거우면 스쿼트 75×5×3 유지', rest: 30, sets: [{w:0,r:1,done:false}] },
+    { name: '밴드 풀어파트 (워밍업)', rest: 30, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] },
+    { name: '바벨 백스쿼트 — 넓은 그립 · 팔 힘 빼고 팔꿈치 아래로 · 하이바 · 평행까지 · 다리 말고 왼어깨가 기준', rest: 180, sets: [{w:20,r:10,done:false},{w:40,r:5,done:false},{w:60,r:3,done:false},{w:70,r:2,done:false},{w:80,r:5,done:false},{w:80,r:5,done:false},{w:80,r:5,done:false}] },
+    { name: '플랫 벤치프레스 — 먼저 · 안전바 · 6회 3세트 다 되면 다음엔 7회', rest: 180, sets: [{w:20,r:10,done:false},{w:42,r:5,done:false},{w:55,r:3,done:false},{w:65,r:6,done:false},{w:65,r:6,done:false},{w:65,r:6,done:false}] },
+    { name: '시티드 레그컬', rest: 75, sets: [{w:45.5,r:12,done:false},{w:45.5,r:12,done:false},{w:45.5,r:12,done:false}] },
+    { name: '시티드로우 머신 — 10회→12회', rest: 90, sets: [{w:54.5,r:12,done:false},{w:54.5,r:12,done:false},{w:54.5,r:12,done:false}] },
+    { name: '레터럴레이즈', rest: 60, sets: [{w:6,r:15,done:false},{w:6,r:15,done:false}] },
+    { name: '리버스 플라이 (델토이드 플라이 머신)', rest: 60, sets: [{w:22.5,r:15,done:false},{w:22.5,r:15,done:false}] }
+  ]},
+  '2026-10-27': { exercises: [
+    { name: '존2 러닝 40분 — 첫 km 9분대 · 141 넘으면 걷기 (횟수=분)', rest: 60, sets: [{w:0,r:40,done:false}] },
+    { name: '밴드 풀어파트 + 벽 푸시업 플러스 (각 15회)', rest: 45, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] }
+  ]},
+  '2026-10-28': { exercises: [
+    { name: '글루트 브릿지 (워밍업)', rest: 30, sets: [{w:0,r:10,done:false},{w:0,r:10,done:false}] },
+    { name: '레그프레스 — 누워서 · 7회→8회', rest: 150, sets: [{w:120,r:8,done:false},{w:145,r:5,done:false},{w:168,r:8,done:false},{w:168,r:8,done:false},{w:168,r:8,done:false}] },
+    { name: '45도 백익스텐션 — 12회→15회', rest: 90, sets: [{w:11,r:15,done:false},{w:11,r:15,done:false},{w:11,r:15,done:false}] },
+    { name: '글루트 킥백 머신 · 왼쪽 (+1세트)', rest: 60, sets: [{w:49.5,r:12,done:false},{w:49.5,r:12,done:false},{w:49.5,r:12,done:false},{w:49.5,r:12,done:false}] },
+    { name: '글루트 킥백 머신 · 오른쪽', rest: 60, sets: [{w:49.5,r:12,done:false},{w:49.5,r:12,done:false},{w:49.5,r:12,done:false}] },
+    { name: '레그익스텐션 — 45.5→50', rest: 60, sets: [{w:50,r:12,done:false},{w:50,r:12,done:false},{w:50,r:12,done:false}] },
+    { name: '트레드밀 경사 걷기 — 경사 8~10% · 5.0~5.5km/h · 손잡이 X (횟수=분)', rest: 60, sets: [{w:0,r:15,done:false}] }
+  ]},
+  '2026-10-29': { exercises: [
+    { name: '밴드 풀어파트 (워밍업)', rest: 30, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] },
+    { name: '인클라인 벤치프레스 — 5회→6회', rest: 150, sets: [{w:20,r:10,done:false},{w:40,r:5,done:false},{w:52,r:6,done:false},{w:52,r:6,done:false},{w:52,r:6,done:false}] },
+    { name: '원암 덤벨로우 — 왼쪽 (+1세트) · 18→20', rest: 60, sets: [{w:20,r:10,done:false},{w:20,r:10,done:false},{w:20,r:10,done:false},{w:20,r:10,done:false}] },
+    { name: '원암 덤벨로우 — 오른쪽', rest: 60, sets: [{w:20,r:10,done:false},{w:20,r:10,done:false},{w:20,r:10,done:false}] },
+    { name: '체스트프레스 머신 — 3세트 모두 40.5', rest: 90, sets: [{w:40.5,r:12,done:false},{w:40.5,r:12,done:false},{w:40.5,r:12,done:false}] },
+    { name: 'B1 레터럴레이즈 (B2와 슈퍼세트)', rest: 45, sets: [{w:6,r:15,done:false},{w:6,r:15,done:false}] },
+    { name: 'B2 암컬 머신', rest: 45, sets: [{w:22.5,r:12,done:false},{w:22.5,r:12,done:false},{w:22.5,r:12,done:false}] },
+    { name: '리버스 팩덱', rest: 60, sets: [{w:22.5,r:15,done:false},{w:22.5,r:15,done:false}] }
+  ]},
+  '2026-10-30': { exercises: [
+    { name: '존2 유산소 40분 — 트레드밀 러닝 또는 경사 걷기 (횟수=분)', rest: 60, sets: [{w:0,r:40,done:false}] }
+  ]},
+  '2026-10-31': { exercises: [
+    { name: '자유 유산소 — 자전거 또는 등산 60~90분 · 존2 위주 (횟수=분)', rest: 60, sets: [{w:0,r:75,done:false}] }
+  ]},
+  '2026-11-01': { exercises: [
     { name: '휴식 또는 걷기 30분 (횟수=분)', rest: 60, sets: [{w:0,r:30,done:false}] }
   ]},
 };
