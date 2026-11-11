@@ -346,7 +346,7 @@
 'use strict';
 const KEY = 'workout-tracker-v1';
 const SKIP_KEY = 'workout-tracker-skip';  /* 사용자가 비운 날짜 — SEED가 되살리지 않는다 */
-const BUILD = '2026-11-10.2';  /* 배포할 때마다 올린다 — 캐시 감지용 */
+const BUILD = '2026-11-11.1';  /* 배포할 때마다 올린다 — 캐시 감지용 */
 const PRESET_GROUPS = [
   ['🦵 하체', ['백스쿼트','고블릿 스쿼트','레그프레스','레그컬','레그익스텐션','루마니안 데드리프트','데드리프트','런지','덤벨런지','힙쓰러스트','힙 어브덕션','카프레이즈']],
   ['🫁 가슴', ['벤치프레스','인클라인 벤치프레스','팩덱 플라이','케이블 크로스오버','딥스']],
@@ -836,17 +836,27 @@ const SEED = {
     { name: '야외 존2 30~40분 — 러닝 또는 빠르게 걷기 · 편하게 (횟수=분)', rest: 60, sets: [{w:0,r:35,done:false}] }
   ]},
   '2026-11-12': { exercises: [
-    { name: '휴식 또는 산책 30분 (횟수=분)', rest: 60, sets: [{w:0,r:30,done:false}] }
+    { name: '아침 50분 · 상체 30분 + 존2 20분 · 정자세 횟수만 기록', rest: 30, sets: [{w:0,r:1,done:false}] },
+    { name: '밴드 풀어파트 (워밍업)', rest: 30, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] },
+    { name: '인클라인 벤치 — 낮은 각도(30°) 재시작 테스트 · 팔꿈치 45° · 왼어깨 불편하면 중단', rest: 120, sets: [{w:20,r:10,done:false},{w:42,r:8,done:false},{w:42,r:8,done:false}] },
+    { name: '랫풀다운 — 바가 윗가슴까지 오는 횟수만', rest: 90, sets: [{w:40.5,r:10,done:false},{w:40.5,r:10,done:false},{w:40.5,r:10,done:false}] },
+    { name: '원암 덤벨로우 — 왼쪽 (+1세트) · 오른 날개뼈 당기면 중단', rest: 60, sets: [{w:18,r:10,done:false},{w:18,r:10,done:false},{w:18,r:10,done:false},{w:18,r:10,done:false}] },
+    { name: '원암 덤벨로우 — 오른쪽', rest: 60, sets: [{w:18,r:10,done:false},{w:18,r:10,done:false},{w:18,r:10,done:false}] },
+    { name: 'B1 레터럴레이즈 (B2와 슈퍼세트)', rest: 45, sets: [{w:6,r:15,done:false},{w:6,r:15,done:false}] },
+    { name: 'B2 리버스 팩덱', rest: 45, sets: [{w:22.5,r:15,done:false},{w:22.5,r:15,done:false}] },
+    { name: '트레드밀 존2 — 심박 130~141 (횟수=분)', rest: 60, sets: [{w:0,r:20,done:false}] }
   ]},
   '2026-11-13': { exercises: [
     { name: '인바디 먼저 — 아침 공복 · 화장실 후 · 물도 마시기 전 · 운동 전 (10/12와 같은 조건)', rest: 30, sets: [{w:0,r:1,done:false}] },
-    { name: '밴드 풀어파트 (워밍업)', rest: 30, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] },
-    { name: '인클라인 벤치 — 낮은 각도(30°) 재시작 테스트 · 팔꿈치 45°', rest: 120, sets: [{w:20,r:10,done:false},{w:42,r:8,done:false},{w:42,r:8,done:false}] },
-    { name: '시티드로우 머신 — 가볍게 · 날개뼈 결림 없으면', rest: 90, sets: [{w:45,r:10,done:false},{w:45,r:10,done:false}] },
-    { name: '레그프레스 — 누워서 (디로드)', rest: 120, sets: [{w:145,r:10,done:false},{w:145,r:10,done:false}] },
-    { name: 'B1 암컬 머신 (B2와 슈퍼세트)', rest: 45, sets: [{w:22.5,r:10,done:false},{w:22.5,r:10,done:false}] },
-    { name: 'B2 케이블 트라이셉스 푸시다운', rest: 45, sets: [{w:14.5,r:12,done:false},{w:14.5,r:12,done:false}] },
-    { name: '리버스 팩덱 — 결림 없으면', rest: 60, sets: [{w:18,r:12,done:false},{w:18,r:12,done:false}] },
+    { name: '글루트 브릿지 (워밍업)', rest: 30, sets: [{w:0,r:10,done:false},{w:0,r:10,done:false}] },
+    { name: '레그프레스 — 누워서', rest: 150, sets: [{w:120,r:8,done:false},{w:145,r:5,done:false},{w:168,r:8,done:false},{w:168,r:8,done:false},{w:168,r:8,done:false}] },
+    { name: '글루트 킥백 머신 · 왼쪽 (+1세트)', rest: 60, sets: [{w:49.5,r:12,done:false},{w:49.5,r:12,done:false},{w:49.5,r:12,done:false},{w:49.5,r:12,done:false}] },
+    { name: '글루트 킥백 머신 · 오른쪽', rest: 60, sets: [{w:49.5,r:12,done:false},{w:49.5,r:12,done:false},{w:49.5,r:12,done:false}] },
+    { name: '레그익스텐션', rest: 60, sets: [{w:50,r:12,done:false},{w:50,r:12,done:false},{w:50,r:12,done:false}] },
+    { name: 'A1 체스트프레스 머신 (A2와 슈퍼세트)', rest: 60, sets: [{w:40.5,r:12,done:false},{w:40.5,r:12,done:false}] },
+    { name: 'A2 시티드로우 머신 — 가볍게', rest: 60, sets: [{w:49.5,r:10,done:false},{w:49.5,r:10,done:false}] },
+    { name: 'B1 암컬 머신 (B2와 슈퍼세트)', rest: 45, sets: [{w:22.5,r:12,done:false},{w:22.5,r:12,done:false}] },
+    { name: 'B2 케이블 트라이셉스 푸시다운', rest: 45, sets: [{w:18.5,r:12,done:false},{w:18.5,r:12,done:false}] },
     { name: '트레드밀 존2 (횟수=분)', rest: 60, sets: [{w:0,r:15,done:false}] }
   ]},
   '2026-11-14': { exercises: [
