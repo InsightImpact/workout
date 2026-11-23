@@ -90,6 +90,8 @@
     width: 34px; height: 34px; border-radius: 9px; background: var(--card2); font-size: 15px; color: var(--sub);
     display: inline-flex; align-items: center; justify-content: center;
   }
+  .plate-hint { display: block; font-size: 10.5px; line-height: 1.3; color: var(--sub); margin-top: 3px; white-space: normal; }
+  .plate-hint.off { color: var(--orange); font-weight: 600; }
   .chk.on { background: var(--green); color: #fff; }
   .set-actions { display: flex; gap: 8px; margin-top: 10px; }
   .set-actions button { flex: 1; padding: 11px 4px; font-size: 13px; font-weight: 600; background: var(--card2); }
@@ -346,7 +348,7 @@
 'use strict';
 const KEY = 'workout-tracker-v1';
 const SKIP_KEY = 'workout-tracker-skip';  /* 사용자가 비운 날짜 — SEED가 되살리지 않는다 */
-const BUILD = '2026-11-23.2';  /* 배포할 때마다 올린다 — 캐시 감지용 */
+const BUILD = '2026-11-23.4';  /* 배포할 때마다 올린다 — 캐시 감지용 */
 const PRESET_GROUPS = [
   ['🦵 하체', ['백스쿼트','고블릿 스쿼트','레그프레스','레그컬','레그익스텐션','루마니안 데드리프트','데드리프트','런지','덤벨런지','힙쓰러스트','힙 어브덕션','카프레이즈']],
   ['🫁 가슴', ['벤치프레스','인클라인 벤치프레스','팩덱 플라이','케이블 크로스오버','딥스']],
@@ -927,9 +929,9 @@ const SEED = {
     { name: '트레드밀 경사 걷기 (횟수=분)', rest: 60, sets: [{w:0,r:15,done:false}] }
   ]},
   '2026-11-24': { exercises: [
-    { name: '상체 A · 아침 왼어깨 확인 — 평소 수준이면 벤치 70, 신경 쓰이면 67.5×6×3', rest: 30, sets: [{w:0,r:1,done:false}] },
+    { name: '상체 A · 아침 왼어깨 확인 — 평소 수준이면 벤치 69.9, 신경 쓰이면 67.6×6×3 (한쪽 45+5+2.5 lb)', rest: 30, sets: [{w:0,r:1,done:false}] },
     { name: '밴드 풀어파트 (워밍업)', rest: 30, sets: [{w:0,r:15,done:false},{w:0,r:15,done:false}] },
-    { name: '플랫 벤치프레스 — 3세트 상한 · 백오프 없음 · 정자세 횟수만', rest: 180, sets: [{w:20,r:10,done:false},{w:42,r:5,done:false},{w:55,r:3,done:false},{w:65,r:1,done:false},{w:70,r:5,done:false},{w:70,r:5,done:false},{w:70,r:5,done:false}] },
+    { name: '플랫 벤치프레스 — 3세트 상한 · 백오프 없음 · 정자세 횟수만', rest: 180, sets: [{w:20,r:10,done:false},{w:42.7,r:5,done:false},{w:56.3,r:3,done:false},{w:65.4,r:1,done:false},{w:69.9,r:5,done:false},{w:69.9,r:5,done:false},{w:69.9,r:5,done:false}] },
     { name: '랫풀다운 — 45 · 10회→12회', rest: 90, sets: [{w:45,r:12,done:false},{w:45,r:12,done:false},{w:45,r:12,done:false}] },
     { name: '어시스트 풀업 — 보조 85→75', rest: 90, sets: [{w:75,r:8,done:false},{w:75,r:8,done:false}] },
     { name: '원암 덤벨로우 — 왼쪽 (+1세트) · 18→20', rest: 60, sets: [{w:20,r:10,done:false},{w:20,r:10,done:false},{w:20,r:10,done:false},{w:20,r:10,done:false}] },
@@ -945,7 +947,7 @@ const SEED = {
     { name: '글루트 브릿지 (워밍업)', rest: 30, sets: [{w:0,r:10,done:false},{w:0,r:10,done:false}] },
     { name: '레그프레스 — 누워서 · 스쿼트 없는 날이라 3세트', rest: 150, sets: [{w:120,r:8,done:false},{w:145,r:5,done:false},{w:179,r:8,done:false},{w:179,r:8,done:false},{w:179,r:8,done:false}] },
     { name: '시티드 레그컬', rest: 75, sets: [{w:45.5,r:12,done:false},{w:45.5,r:12,done:false},{w:45.5,r:12,done:false}] },
-    { name: '45도 백익스텐션', rest: 90, sets: [{w:15,r:12,done:false},{w:15,r:12,done:false},{w:15,r:12,done:false}] },
+    { name: '45도 백익스텐션 — 35 lb 원판', rest: 90, sets: [{w:15.9,r:12,done:false},{w:15.9,r:12,done:false},{w:15.9,r:12,done:false}] },
     { name: 'B1 레그익스텐션 (B2와 슈퍼세트)', rest: 60, sets: [{w:50,r:12,done:false},{w:50,r:12,done:false},{w:50,r:12,done:false}] },
     { name: 'B2 글루트 킥백 머신 · 좌우 (왼쪽 먼저)', rest: 60, sets: [{w:49.5,r:12,done:false},{w:49.5,r:12,done:false},{w:49.5,r:12,done:false}] },
     { name: '트레드밀 존2 (횟수=분)', rest: 60, sets: [{w:0,r:20,done:false}] }
@@ -1134,11 +1136,14 @@ function renderRoutine() {
     const table = document.createElement('table');
     table.className = 'sets';
     table.innerHTML = '<tr><th>세트</th><th>kg</th><th>횟수</th><th>완료</th></tr>';
+    const pMode = plateMode(ex.name);
     ex.sets.forEach((s, si) => {
       const tr = document.createElement('tr');
       if (s.done) tr.className = 'done-row';
       const tdN = document.createElement('td'); tdN.className='set-num'; tdN.textContent = si+1;
-      const tdW = document.createElement('td'); tdW.appendChild(mkNum(s.w, v => { s.w = v; save(); }));
+      const tdW = document.createElement('td'); let updHint = () => {};
+      tdW.appendChild(mkNum(s.w, v => { s.w = v; save(); updHint(); }));
+      updHint = mkPlateHint(tdW, () => s.w, pMode);
       const tdR = document.createElement('td'); tdR.appendChild(mkNum(s.r, v => { s.r = v; save(); }));
       const tdC = document.createElement('td');
       const chk = document.createElement('button');
@@ -1188,6 +1193,46 @@ function renderRoutine() {
     card.appendChild(actions);
     box.appendChild(card);
   });
+}
+/* ── 원판 조합 (파운드 원판 45/35/25/10/5/2.5 · 바 20kg) ── */
+const LB = 0.45359237, BAR_KG = 20, PLATES_LB = [45, 35, 25, 10, 5, 2.5];
+function plateMode(name) {
+  if (/레그프레스|덤벨|머신|스미스|스플릿|불가리안/.test(name)) return null;
+  if (/벤치프레스|스쿼트|바벨/.test(name)) return 'bar';
+  if (/백익스텐션/.test(name)) return 'plate';
+  return null;
+}
+function minPlates(units) {            /* units = 2.5lb 단위 개수, 가장 적은 장수 조합 */
+  const U = PLATES_LB.map(p => Math.round(p / 2.5));
+  const best = [[]];
+  for (let n = 1; n <= units; n++) {
+    let pick = null;
+    for (const u of U) if (u <= n && best[n-u] && (!pick || best[n-u].length + 1 < pick.length)) pick = [...best[n-u], u];
+    best[n] = pick;
+  }
+  return (best[units] || []).map(u => u * 2.5).sort((a,b) => b - a);
+}
+function fmtPlates(list) {
+  const cnt = {}; list.forEach(p => cnt[p] = (cnt[p] || 0) + 1);
+  return Object.keys(cnt).map(Number).sort((a,b) => b - a).map(p => `${p}×${cnt[p]}`).join(' + ');
+}
+function plateHint(kg, mode) {
+  if (!mode || !(kg > 0)) return null;
+  const load = mode === 'bar' ? (kg - BAR_KG) / 2 : kg;
+  if (mode === 'bar' && load < 0.5) return { text: '빈 바 (20kg)', off: Math.abs(kg - BAR_KG) > 0.05 };
+  const units = Math.max(1, Math.round(load / LB / 2.5));
+  const list = minPlates(units);
+  const real = mode === 'bar' ? BAR_KG + 2 * units * 2.5 * LB : units * 2.5 * LB;
+  const realR = Math.round(real * 10) / 10;
+  const off = Math.abs(realR - kg) > 0.05;
+  const label = (mode === 'bar' ? '한쪽 ' : '원판 ') + fmtPlates(list) + ' lb';
+  return { text: off ? `${label} → 실제 ${realR}kg` : label, off };
+}
+function mkPlateHint(td, getKg, mode) {
+  if (!mode) return () => {};
+  const el = document.createElement('span');
+  const upd = () => { const h = plateHint(getKg(), mode); el.className = 'plate-hint' + (h && h.off ? ' off' : ''); el.textContent = h ? h.text : ''; };
+  upd(); td.appendChild(el); return upd;
 }
 function mkBtn(txt, fn) { const b = document.createElement('button'); b.textContent = txt; b.onclick = fn; return b; }
 function mkNum(val, onchange) {
